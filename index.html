@@ -703,22 +703,8 @@
       </div>
       <a href="trending-issues.html" class="view-all">View all issues →</a>
     </div>
-    <div class="issue-grid">
-      <div class="issue-card">
-        <span class="sector-tag">Infrastructure</span>
-        <h3>Should toll plazas disclose their concession period and recovery status?</h3>
-        <div class="issue-stats"><span>82% agree on problem</span><span>1.4k in discussion</span></div>
-      </div>
-      <div class="issue-card">
-        <span class="sector-tag">Governance</span>
-        <h3>Should government projects have mandatory quality guarantees?</h3>
-        <div class="issue-stats"><span>76% agree on problem</span><span>960 in discussion</span></div>
-      </div>
-      <div class="issue-card">
-        <span class="sector-tag">Public Services</span>
-        <h3>Should delayed government services trigger automatic escalation?</h3>
-        <div class="issue-stats"><span>88% agree on problem</span><span>1.1k in discussion</span></div>
-      </div>
+    <div class="issue-grid" id="homeIssueGrid">
+      <p style="color:var(--muted);font-size:15px;">Loading live issues…</p>
     </div>
   </div>
 </section>
@@ -803,6 +789,45 @@
     subForm.style.display = 'none';
     subSuccess.style.display = 'block';
   });
+
+  /* ============================================================
+     DATABASE CONNECTION — same "issues" table as trending-issues.html.
+     Shows the 3 most recent live issues. Fill in once Supabase is ready.
+     ============================================================ */
+  const SUPABASE_URL = "";      // e.g. "https://xxxx.supabase.co"
+  const SUPABASE_ANON_KEY = ""; // your public anon key
+  const sectorLabels = { infra:"Infrastructure", gov:"Governance", services:"Public Services", env:"Environment", edu:"Education", health:"Health", other:"Other" };
+
+  async function loadHomeIssues(){
+    const grid = document.getElementById('homeIssueGrid');
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      grid.innerHTML = '<p style="color:var(--muted);font-size:15px;">Live issues will appear here once the database is connected.</p>';
+      return;
+    }
+    try{
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/issues?select=*&status=eq.live&order=created_at.desc&limit=3`,
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      if(!res.ok) throw new Error('Fetch failed');
+      const issues = await res.json();
+      if(issues.length === 0){
+        grid.innerHTML = '<p style="color:var(--muted);font-size:15px;">No issues yet — be the first to <a href="propose-issue.html" style="color:var(--blue);font-weight:600;">propose one</a>.</p>';
+        return;
+      }
+      grid.innerHTML = issues.map(issue => `
+        <div class="issue-card">
+          <span class="sector-tag">${sectorLabels[issue.sector] || issue.sector}</span>
+          <h3>${issue.title}</h3>
+          <div class="issue-stats"><span>${issue.consensus_pct != null ? issue.consensus_pct + '% agree on problem' : 'New'}</span></div>
+        </div>
+      `).join('');
+    } catch(err){
+      console.error('Could not load issues:', err);
+      grid.innerHTML = '<p style="color:var(--muted);font-size:15px;">Couldn\'t load live issues right now.</p>';
+    }
+  }
+  loadHomeIssues();
 </script>
 
 </body>
