@@ -196,6 +196,130 @@
   .radio-chip small{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
   .radio-chip:has(input:checked){border-color:var(--blue);background:#EEF3FE;}
 
+  /* ---------- MODE SELECTOR ---------- */
+  .mode-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:8px;
+    display:flex;
+    gap:8px;
+    margin-bottom:36px;
+  }
+  .mode-option{
+    flex:1;
+    padding:18px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    position:relative;
+    transition:background .15s ease;
+  }
+  .mode-option input{position:absolute;opacity:0;}
+  .mode-option .mo-title{
+    font-family:'Fraunces', serif;
+    font-size:16.5px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .mode-option .mo-title .radio-dot{
+    width:16px;height:16px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex-shrink:0;
+    position:relative;
+  }
+  .mode-option .mo-desc{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.5;}
+  .mode-option:has(input:checked){background:#EEF3FE;}
+  .mode-option:has(input:checked) .radio-dot{border-color:var(--blue);}
+  .mode-option:has(input:checked) .radio-dot::after{
+    content:"";
+    position:absolute;
+    inset:3px;
+    border-radius:50%;
+    background:var(--blue);
+  }
+  @media(max-width:640px){.mode-card{flex-direction:column;}}
+
+  /* existing-issue search/select */
+  .existing-picker{
+    background:#F1EEE4;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:20px 22px;
+    margin-bottom:24px;
+  }
+  .existing-picker .field{margin-bottom:0;}
+  .search-wrap{position:relative;}
+  .search-wrap input{padding-left:38px;}
+  .search-wrap .s-icon{
+    position:absolute;
+    left:13px;top:50%;
+    transform:translateY(-50%);
+    color:var(--muted);
+    font-size:14px;
+    pointer-events:none;
+  }
+  .issue-results{
+    margin-top:10px;
+    max-height:260px;
+    overflow-y:auto;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper-card);
+  }
+  .issue-result{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    padding:13px 15px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+  }
+  .issue-result:last-child{border-bottom:none;}
+  .issue-result:hover{background:var(--paper);}
+  .issue-result.selected{background:#EEF3FE;}
+  .issue-result .ir-title{font-size:14px;font-weight:600;line-height:1.4;}
+  .issue-result .ir-meta{font-size:12px;color:var(--muted);margin-top:4px;}
+  .issue-result .ir-tag{
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--green);
+    background:#E7F4EC;
+    padding:3px 8px;
+    border-radius:5px;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .no-results{padding:16px;font-size:13.5px;color:var(--muted);text-align:center;}
+  .selected-issue-banner{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:#EEF3FE;
+    border:1px solid #C7D9FA;
+    border-radius:8px;
+    padding:13px 16px;
+    margin-top:12px;
+    font-size:13.5px;
+  }
+  .selected-issue-banner strong{font-weight:700;}
+  .selected-issue-banner button{
+    background:none;
+    border:none;
+    color:var(--blue);
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .contribution-type-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+
   /* privacy card */
   .privacy-card{
     background:var(--paper-card);
@@ -322,7 +446,7 @@
   <div class="wrap">
     <div class="breadcrumb"><a href="index.html">Home</a> / Propose an Issue</div>
     <h1>Propose an Issue</h1>
-    <p>Tell us about a public problem worth fixing. We ask for the minimum needed to follow up with you — nothing more, and it's never shown to other users.</p>
+    <p>Raise a new public problem, or add evidence and perspective to a discussion that's already happening. Either way, we ask for the minimum needed to follow up with you — nothing more.</p>
   </div>
 </section>
 
@@ -334,17 +458,35 @@
     <form id="issueForm">
 
       <fieldset>
+        <legend>Start here</legend>
+        <p class="legend-sub">Is this a brand-new problem, or does it belong to a discussion that's already happening?</p>
+
+        <div class="mode-card">
+          <label class="mode-option">
+            <input type="radio" name="mode" value="new" checked>
+            <div class="mo-title"><span class="radio-dot"></span>New issue</div>
+            <div class="mo-desc">Nobody's raised this on JanNiti yet.</div>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="mode" value="existing">
+            <div class="mo-title"><span class="radio-dot"></span>Add to an ongoing discussion</div>
+            <div class="mo-desc">This is related to an issue already being discussed.</div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset id="newIssueFields">
         <legend>The issue</legend>
         <p class="legend-sub">This part is public — it's what other citizens will read and discuss.</p>
 
         <div class="field">
           <label for="title">Issue title</label>
-          <input type="text" id="title" name="title" placeholder="e.g. Should toll plazas disclose their concession period?" required maxlength="140">
+          <input type="text" id="title" name="title" placeholder="e.g. Should toll plazas disclose their concession period?" maxlength="140">
         </div>
 
         <div class="field">
           <label for="sector">Sector</label>
-          <select id="sector" name="sector" required>
+          <select id="sector" name="sector">
             <option value="" disabled selected>Choose the closest fit</option>
             <option value="infra">Infrastructure</option>
             <option value="gov">Governance</option>
@@ -357,8 +499,8 @@
         </div>
 
         <div class="field">
-          <label for="description">What's the problem? <span class="optional"></span></label>
-          <textarea id="description" name="description" placeholder="Describe the problem as you've experienced or observed it. What's happening, and why does it matter?" required></textarea>
+          <label for="description">What's the problem?</label>
+          <textarea id="description" name="description" placeholder="Describe the problem as you've experienced or observed it. What's happening, and why does it matter?"></textarea>
         </div>
 
         <div class="field">
@@ -370,6 +512,57 @@
         <div class="field">
           <label for="solution">A possible solution <span class="optional">(optional)</span></label>
           <textarea id="solution" name="solution" placeholder="If you already have an idea for how this could be fixed, share it — other citizens and experts can refine it."></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset id="existingIssueFields" style="display:none;">
+        <legend>Find the discussion</legend>
+        <p class="legend-sub">Search for the issue you'd like to add to.</p>
+
+        <div class="existing-picker">
+          <div class="field">
+            <label for="issueSearch">Search open issues</label>
+            <div class="search-wrap">
+              <span class="s-icon">⌕</span>
+              <input type="text" id="issueSearch" placeholder="Try a keyword like &quot;toll&quot;, &quot;RTI&quot;, or a sector name">
+            </div>
+            <div class="issue-results" id="issueResults"></div>
+            <div class="selected-issue-banner" id="selectedBanner">
+              <span>Adding to: <strong id="selectedTitle"></strong></span>
+              <button type="button" id="clearSelected">Change</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>What are you contributing?</label>
+          <div class="contribution-type-row radio-row">
+            <label class="radio-chip">
+              <input type="radio" name="contribution" value="evidence" checked>
+              <span>Evidence</span>
+              <small>A document, article or data point</small>
+            </label>
+            <label class="radio-chip">
+              <input type="radio" name="contribution" value="perspective">
+              <span>Perspective</span>
+              <small>Your experience or view on it</small>
+            </label>
+            <label class="radio-chip">
+              <input type="radio" name="contribution" value="solution">
+              <span>Solution idea</span>
+              <small>A proposed fix or amendment</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="contribText">Your contribution</label>
+          <textarea id="contribText" name="contribText" placeholder="Share what you'd like to add to this discussion — a fact, a source, your experience, or an idea."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="contribLink">Supporting link <span class="optional">(optional)</span></label>
+          <input type="url" id="contribLink" name="contribLink" placeholder="Link to a document, article or official source">
         </div>
       </fieldset>
 
@@ -411,6 +604,16 @@
         </div>
 
         <div class="field">
+          <label for="background">Relevant background or expertise <span class="optional">(optional)</span></label>
+          <input type="text" id="background" name="background" placeholder="e.g. Civil engineer, Practicing advocate, Public policy graduate" maxlength="80">
+          <p class="hint">Self-declared — not verified in beta. If you add this, a small badge appears next to your name on this contribution, so other citizens can see it may come from domain experience. Leave blank and nothing is shown.</p>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;">
+            <input type="checkbox" id="showBackground" name="showBackground" checked style="width:16px;height:16px;">
+            Show this badge publicly on my contribution
+          </label>
+        </div>
+
+        <div class="field">
           <label for="state">State / UT <span class="optional">(optional)</span></label>
           <input type="text" id="state" name="state" placeholder="e.g. Maharashtra">
           <p class="hint">Helps route the proposal to the right authority later. No city, address or pin code needed.</p>
@@ -420,8 +623,9 @@
       <div class="privacy-card">
         <h3><span class="badge">✓</span>What we collect, and what we don't</h3>
         <ul class="privacy-list">
-          <li><span class="icon">✓</span>Just your email and, optionally, a display name and state — the minimum needed to verify and follow up.</li>
+          <li><span class="icon">✓</span>Just your email and, optionally, a display name, background badge, and state — the minimum needed to verify, follow up, and add useful context.</li>
           <li><span class="icon">✓</span>Your email stays private and is never shown to other users or made public.</li>
+          <li><span class="icon">✓</span>The background badge is self-declared, entirely optional, and shown only if you choose to.</li>
           <li><span class="icon">✓</span>You can post anonymously to everyone except our moderation team.</li>
           <li><span class="icon no">✕</span>We never ask for phone number, home address, or government ID to submit an issue.</li>
           <li><span class="icon no">✕</span>We never sell your data or share individual profiles with third parties.</li>
@@ -441,8 +645,8 @@
 
     <div class="success-panel" id="successPanel">
       <div class="check">✓</div>
-      <h2>Your issue has been received</h2>
-      <p>We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll appear on Trending Issues and other citizens can start discussing it.</p>
+      <h2 id="successHeading">Your issue has been received</h2>
+      <p id="successBody">We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll appear on Trending Issues and other citizens can start discussing it.</p>
       <a href="trending-issues.html" class="btn btn-primary">View Trending Issues</a>
     </div>
 
@@ -497,13 +701,229 @@
     menuBtn.setAttribute('aria-expanded', 'false');
   }));
 
+  /* ---------- mode toggle: new issue vs existing discussion ---------- */
+  const modeRadios = document.querySelectorAll('input[name="mode"]');
+  const newFields = document.getElementById('newIssueFields');
+  const existingFields = document.getElementById('existingIssueFields');
+  const titleInput = document.getElementById('title');
+  const sectorInput = document.getElementById('sector');
+  const descriptionInput = document.getElementById('description');
+  const contribText = document.getElementById('contribText');
+
+  function applyMode(mode){
+    if(mode === 'existing'){
+      newFields.style.display = 'none';
+      existingFields.style.display = 'block';
+      titleInput.removeAttribute('required');
+      sectorInput.removeAttribute('required');
+      descriptionInput.removeAttribute('required');
+      contribText.setAttribute('required', 'required');
+    } else {
+      newFields.style.display = 'block';
+      existingFields.style.display = 'none';
+      titleInput.setAttribute('required', 'required');
+      sectorInput.setAttribute('required', 'required');
+      descriptionInput.setAttribute('required', 'required');
+      contribText.removeAttribute('required');
+    }
+  }
+  modeRadios.forEach(r => r.addEventListener('change', (e) => applyMode(e.target.value)));
+  applyMode('new');
+
+  /* ============================================================
+     DATABASE CONNECTION
+     Same "issues" table as trending-issues.html. Fill in once
+     your Supabase project is ready — this page fetches "live"
+     issues so people can attach their contribution to a real one.
+     ============================================================ */
+  const SUPABASE_URL = "";      // e.g. "https://xxxx.supabase.co"
+  const SUPABASE_ANON_KEY = ""; // your public anon key
+
+  let openIssues = [];
+
+  const issueSearch = document.getElementById('issueSearch');
+  const issueResults = document.getElementById('issueResults');
+  const selectedBanner = document.getElementById('selectedBanner');
+  const selectedTitle = document.getElementById('selectedTitle');
+  const clearSelected = document.getElementById('clearSelected');
+  let chosenIssue = null;
+
+  async function loadOpenIssues(){
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      issueResults.innerHTML = '<div class="no-results">Live issues aren\'t connected yet — check back soon, or start a "New issue" above.</div>';
+      return;
+    }
+    try{
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/issues?select=id,title,sector&status=eq.live&order=created_at.desc`,
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      if(!res.ok) throw new Error('Fetch failed');
+      openIssues = await res.json();
+    } catch(err){
+      console.error('Could not load open issues:', err);
+      issueResults.innerHTML = '<div class="no-results">Couldn\'t load issues right now — please refresh.</div>';
+    }
+  }
+
+  function renderResults(query){
+    const q = query.trim().toLowerCase();
+    const matches = q.length === 0
+      ? openIssues
+      : openIssues.filter(i => i.title.toLowerCase().includes(q) || (i.sector || '').toLowerCase().includes(q));
+
+    if(matches.length === 0){
+      issueResults.innerHTML = openIssues.length === 0
+        ? '<div class="no-results">No open issues yet. Switch to "New issue" above to start one.</div>'
+        : '<div class="no-results">No matching issues. Try a different keyword, or switch to "New issue" above.</div>';
+      return;
+    }
+    issueResults.innerHTML = matches.map(issue => `
+      <div class="issue-result" data-id="${issue.id}">
+        <div class="ir-title">${issue.title}</div>
+        <span class="ir-tag">${issue.sector || ''}</span>
+      </div>
+    `).join('');
+  }
+
+  issueSearch.addEventListener('focus', () => renderResults(issueSearch.value));
+  issueSearch.addEventListener('input', () => renderResults(issueSearch.value));
+
+  issueResults.addEventListener('click', (e) => {
+    const row = e.target.closest('.issue-result');
+    if(!row) return;
+    chosenIssue = openIssues.find(i => String(i.id) === row.dataset.id);
+    if(!chosenIssue) return;
+    selectedTitle.textContent = chosenIssue.title;
+    selectedBanner.style.display = 'flex';
+    issueSearch.value = '';
+    issueResults.innerHTML = '';
+    issueSearch.style.display = 'none';
+  });
+
+  clearSelected.addEventListener('click', () => {
+    chosenIssue = null;
+    selectedBanner.style.display = 'none';
+    issueSearch.style.display = 'block';
+    issueSearch.focus();
+  });
+
+  loadOpenIssues();
+
+  /* ---------- background badge preview ---------- */
+  const backgroundInput = document.getElementById('background');
+  const showBackgroundCheckbox = document.getElementById('showBackground');
+  function syncBackgroundCheckbox(){
+    const hasText = backgroundInput.value.trim().length > 0;
+    showBackgroundCheckbox.disabled = !hasText;
+    if(!hasText) showBackgroundCheckbox.checked = false;
+    else if(!showBackgroundCheckbox.dataset.touched) showBackgroundCheckbox.checked = true;
+  }
+  backgroundInput.addEventListener('input', syncBackgroundCheckbox);
+  showBackgroundCheckbox.addEventListener('change', () => showBackgroundCheckbox.dataset.touched = 'true');
+  syncBackgroundCheckbox();
+
   const form = document.getElementById('issueForm');
   const successPanel = document.getElementById('successPanel');
-  form.addEventListener('submit', (e) => {
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    form.style.display = 'none';
-    successPanel.style.display = 'block';
-    successPanel.scrollIntoView({behavior:'smooth', block:'start'});
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    if(mode === 'existing' && !chosenIssue){
+      issueSearch.focus();
+      issueResults.style.outline = '2px solid #DC2626';
+      setTimeout(() => issueResults.style.outline = 'none', 1200);
+      return;
+    }
+
+    const capacity = document.querySelector('input[name="capacity"]:checked').value;
+    const showBg = showBackgroundCheckbox.checked && backgroundInput.value.trim().length > 0;
+    const contactFields = {
+      display_name: document.getElementById('displayName').value.trim() || null,
+      email: document.getElementById('email').value.trim(),
+      capacity,
+      background: backgroundInput.value.trim() || null,
+      show_background: showBg,
+      state: document.getElementById('state').value.trim() || null
+    };
+
+    const successHeading = document.getElementById('successHeading');
+    const successBody = document.getElementById('successBody');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try{
+      if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+        // Database not connected yet — nothing is saved. Say so plainly rather than faking success.
+        throw new Error('not_connected');
+      }
+
+      if(mode === 'existing'){
+        const payload = {
+          issue_id: chosenIssue.id,
+          type: document.querySelector('input[name="contribution"]:checked').value,
+          text: document.getElementById('contribText').value.trim(),
+          link: document.getElementById('contribLink').value.trim() || null,
+          status: 'pending',
+          ...contactFields
+        };
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/contributions`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error('insert_failed');
+        successHeading.textContent = 'Your contribution has been received';
+        successBody.textContent = `We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll be added to the discussion on "${chosenIssue.title}".`;
+      } else {
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          sector: document.getElementById('sector').value,
+          description: document.getElementById('description').value.trim(),
+          evidence_url: document.getElementById('evidence').value.trim() || null,
+          solution: document.getElementById('solution').value.trim() || null,
+          stage: 'evidence',
+          status: 'pending',
+          ...contactFields
+        };
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/issues`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error('insert_failed');
+        successHeading.textContent = 'Your issue has been received';
+        successBody.textContent = "We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll appear on Trending Issues and other citizens can start discussing it.";
+      }
+      form.style.display = 'none';
+      successPanel.style.display = 'block';
+      successPanel.scrollIntoView({behavior:'smooth', block:'start'});
+    } catch(err){
+      if(err.message === 'not_connected'){
+        successHeading.textContent = 'Almost there — database not connected yet';
+        successBody.textContent = "This form is ready to go, but it isn't saving submissions yet because the database hasn't been connected. Nothing was lost — please check back once it's live.";
+        form.style.display = 'none';
+        successPanel.style.display = 'block';
+        successPanel.scrollIntoView({behavior:'smooth', block:'start'});
+      } else {
+        console.error('Submission failed:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Issue';
+        alert("Something went wrong submitting this — please try again in a moment.");
+      }
+    }
   });
 </script>
 
