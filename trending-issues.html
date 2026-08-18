@@ -339,6 +339,16 @@
   }
   .load-more:hover{border-color:var(--ink);}
 
+  .empty-state{
+    display:none;
+    text-align:center;
+    padding:64px 20px;
+    background:var(--paper-card);
+    border:1px dashed var(--line);
+    border-radius:14px;
+  }
+  .empty-state p{font-size:15.5px;color:var(--muted);margin:0;}
+
   /* ---------- CTA STRIP ---------- */
   .cta-strip{
     background:var(--ink);
@@ -431,9 +441,9 @@
     <h1>Trending Issues</h1>
     <p>Public problems citizens are currently discussing, evidencing and refining into policy proposals — sorted by where deliberation is most active.</p>
     <div class="hero-stats">
-      <div class="hstat"><b>128</b><span>Open Issues</span></div>
-      <div class="hstat"><b>34</b><span>In Expert Review</span></div>
-      <div class="hstat"><b>9</b><span>Reached Authorities</span></div>
+      <div class="hstat"><b id="statOpen">—</b><span>Open Issues</span></div>
+      <div class="hstat"><b id="statReview">—</b><span>In Expert Review</span></div>
+      <div class="hstat"><b id="statAuthorities">—</b><span>Reached Authorities</span></div>
     </div>
   </div>
 </section>
@@ -450,9 +460,9 @@
       <button class="chip" data-filter="health">Health</button>
     </div>
     <select class="sort-select" id="sortSelect" aria-label="Sort issues">
+      <option value="recent">Recently Added</option>
       <option value="active">Most Active Discussion</option>
       <option value="consensus">Highest Consensus</option>
-      <option value="recent">Recently Added</option>
       <option value="review">Nearest to Expert Review</option>
     </select>
   </div>
@@ -460,99 +470,13 @@
 
 <section class="listing">
   <div class="wrap">
-    <p class="listing-meta" id="listingMeta">Showing 8 of 128 issues</p>
-    <div class="issue-grid" id="issueGrid">
-
-      <div class="issue-card" data-sector="infra">
-        <div class="card-top">
-          <span class="sector-tag infra">Infrastructure</span>
-          <span class="stage-tag">Deliberation</span>
-        </div>
-        <h3>Should toll plazas disclose their concession period and recovery status?</h3>
-        <p class="snippet">Citizens are asking for mandatory public disclosure of project cost, concession period and fee notifications at every toll plaza.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:82%;"></div></div><span>82% agree</span></div>
-        <div class="issue-stats"><span>1.4k in discussion</span><span>212 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="gov">
-        <div class="card-top">
-          <span class="sector-tag gov">Governance</span>
-          <span class="stage-tag">Expert Review</span>
-        </div>
-        <h3>Should government infrastructure projects carry mandatory quality guarantees?</h3>
-        <p class="snippet">A proposal to require defect-liability periods and public quality audits on publicly funded construction projects.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:76%;"></div></div><span>76% agree</span></div>
-        <div class="issue-stats"><span>960 in discussion</span><span>140 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="services">
-        <div class="card-top">
-          <span class="sector-tag services">Public Services</span>
-          <span class="stage-tag">Consensus</span>
-        </div>
-        <h3>Should delayed government services trigger automatic escalation?</h3>
-        <p class="snippet">Citizens propose a rule-based auto-escalation system when statutory service timelines are missed.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:88%;"></div></div><span>88% agree</span></div>
-        <div class="issue-stats"><span>1.1k in discussion</span><span>98 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="env">
-        <div class="card-top">
-          <span class="sector-tag env">Environment</span>
-          <span class="stage-tag">Evidence</span>
-        </div>
-        <h3>Should construction sites be required to publish real-time dust and noise data?</h3>
-        <p class="snippet">A proposal for mandatory public monitoring dashboards at large construction sites near residential areas.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:71%;"></div></div><span>71% agree</span></div>
-        <div class="issue-stats"><span>540 in discussion</span><span>63 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="edu">
-        <div class="card-top">
-          <span class="sector-tag edu">Education</span>
-          <span class="stage-tag">Deliberation</span>
-        </div>
-        <h3>Should college fee hikes require a public justification process?</h3>
-        <p class="snippet">Students and parents propose that private and government-aided colleges publish reasoning before raising fees.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:79%;"></div></div><span>79% agree</span></div>
-        <div class="issue-stats"><span>820 in discussion</span><span>77 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="health">
-        <div class="card-top">
-          <span class="sector-tag health">Health</span>
-          <span class="stage-tag">Evidence</span>
-        </div>
-        <h3>Should generic-medicine availability be mandatory at all government hospital pharmacies?</h3>
-        <p class="snippet">A proposal requiring published, auditable generic-drug stock levels at public hospital pharmacies.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:85%;"></div></div><span>85% agree</span></div>
-        <div class="issue-stats"><span>690 in discussion</span><span>54 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="gov">
-        <div class="card-top">
-          <span class="sector-tag gov">Governance</span>
-          <span class="stage-tag">Deliberation</span>
-        </div>
-        <h3>Should RTI response delays carry automatic penalties on the responding department?</h3>
-        <p class="snippet">Citizens propose automatic, published penalties when statutory RTI response deadlines are missed.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:73%;"></div></div><span>73% agree</span></div>
-        <div class="issue-stats"><span>710 in discussion</span><span>81 evidence items</span></div>
-      </div>
-
-      <div class="issue-card" data-sector="infra">
-        <div class="card-top">
-          <span class="sector-tag infra">Infrastructure</span>
-          <span class="stage-tag">Consensus</span>
-        </div>
-        <h3>Should municipal road-repair contractors be publicly rated by residents?</h3>
-        <p class="snippet">A proposal for a public rating system tied to contractor eligibility for future municipal tenders.</p>
-        <div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:80%;"></div></div><span>80% agree</span></div>
-        <div class="issue-stats"><span>505 in discussion</span><span>46 evidence items</span></div>
-      </div>
-
+    <p class="listing-meta" id="listingMeta">Loading issues…</p>
+    <div class="issue-grid" id="issueGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <p>No issues yet — be the first to raise one.</p>
+      <a href="propose-issue.html" class="btn btn-primary" style="margin-top:16px;">Propose an Issue</a>
     </div>
-    <button class="load-more" id="loadMoreBtn">Load more issues</button>
+    <button class="load-more" id="loadMoreBtn" style="display:none;">Load more issues</button>
   </div>
 </section>
 
@@ -612,34 +536,129 @@
     menuBtn.setAttribute('aria-expanded', 'false');
   }));
 
-  const chips = document.querySelectorAll('.chip');
-  const cards = document.querySelectorAll('.issue-card');
-  const listingMeta = document.getElementById('listingMeta');
+  /* ============================================================
+     DATABASE CONNECTION
+     Fill in your Supabase project URL and anon (public) key below.
+     Expected table: "issues" with columns —
+       id, title, sector, description, evidence_url, solution,
+       stage (text: evidence | deliberation | consensus | review | sent),
+       consensus_pct (int, nullable until real deliberation data exists),
+       status (text: pending | live | closed — only "live" rows show here),
+       created_at (timestamp, default now())
+     RLS should allow public SELECT where status = 'live'.
+     ============================================================ */
+  const SUPABASE_URL = "";      // e.g. "https://xxxx.supabase.co"
+  const SUPABASE_ANON_KEY = ""; // your public anon key
 
+  const sectorLabels = {
+    infra: "Infrastructure", gov: "Governance", services: "Public Services",
+    env: "Environment", edu: "Education", health: "Health", other: "Other"
+  };
+  const sectorClass = { infra:"infra", gov:"gov", services:"services", env:"env", edu:"edu", health:"health", other:"gov" };
+  const stageLabels = {
+    evidence: "Evidence", deliberation: "Deliberation", consensus: "Consensus",
+    review: "Expert Review", sent: "Sent to Authority"
+  };
+
+  const issueGrid = document.getElementById('issueGrid');
+  const listingMeta = document.getElementById('listingMeta');
+  const emptyState = document.getElementById('emptyState');
+  const statOpen = document.getElementById('statOpen');
+  const statReview = document.getElementById('statReview');
+  const statAuthorities = document.getElementById('statAuthorities');
+
+  let allIssues = [];
+
+  function timeAgo(dateStr){
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const days = Math.floor(diffMs / 86400000);
+    if(days <= 0) return "Today";
+    if(days === 1) return "1 day ago";
+    if(days < 30) return `${days} days ago`;
+    const months = Math.floor(days / 30);
+    return `${months} month${months === 1 ? '' : 's'} ago`;
+  }
+
+  function renderIssues(issues){
+    if(issues.length === 0){
+      issueGrid.style.display = 'none';
+      emptyState.style.display = 'block';
+      listingMeta.textContent = '';
+      return;
+    }
+    issueGrid.style.display = 'grid';
+    emptyState.style.display = 'none';
+    listingMeta.textContent = `Showing ${issues.length} issue${issues.length === 1 ? '' : 's'}`;
+
+    issueGrid.innerHTML = issues.map(issue => {
+      const sCls = sectorClass[issue.sector] || 'gov';
+      const sLabel = sectorLabels[issue.sector] || issue.sector;
+      const stage = stageLabels[issue.stage] || 'Evidence';
+      const consensusRow = (issue.consensus_pct !== null && issue.consensus_pct !== undefined)
+        ? `<div class="consensus-mini"><div class="m-track"><div class="m-fill" style="width:${issue.consensus_pct}%;"></div></div><span>${issue.consensus_pct}% agree</span></div>`
+        : '';
+      return `
+        <div class="issue-card" data-sector="${issue.sector}">
+          <div class="card-top">
+            <span class="sector-tag ${sCls}">${sLabel}</span>
+            <span class="stage-tag">${stage}</span>
+          </div>
+          <h3>${issue.title}</h3>
+          <p class="snippet">${(issue.description || '').slice(0, 140)}${(issue.description || '').length > 140 ? '…' : ''}</p>
+          ${consensusRow}
+          <div class="issue-stats"><span>${timeAgo(issue.created_at)}</span></div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function applyFilter(filter){
+    const filtered = filter === 'all' ? allIssues : allIssues.filter(i => i.sector === filter);
+    renderIssues(filtered);
+  }
+
+  async function fetchIssues(){
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      // Not connected yet — show honest empty state instead of fake data.
+      listingMeta.textContent = '';
+      issueGrid.style.display = 'none';
+      emptyState.style.display = 'block';
+      emptyState.querySelector('p').textContent = 'Live issues will appear here once the database is connected.';
+      statOpen.textContent = '—';
+      statReview.textContent = '—';
+      statAuthorities.textContent = '—';
+      return;
+    }
+    try{
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/issues?select=*&status=eq.live&order=created_at.desc`,
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      if(!res.ok) throw new Error('Fetch failed');
+      allIssues = await res.json();
+      renderIssues(allIssues);
+      statOpen.textContent = allIssues.length;
+      statReview.textContent = allIssues.filter(i => i.stage === 'review').length;
+      statAuthorities.textContent = allIssues.filter(i => i.stage === 'sent').length;
+    } catch(err){
+      console.error('Could not load issues:', err);
+      listingMeta.textContent = '';
+      issueGrid.style.display = 'none';
+      emptyState.style.display = 'block';
+      emptyState.querySelector('p').textContent = "Couldn't load issues right now — please refresh.";
+    }
+  }
+
+  const chips = document.querySelectorAll('.chip');
   chips.forEach(chip => {
     chip.addEventListener('click', () => {
       chips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
-      const filter = chip.dataset.filter;
-      let visible = 0;
-      cards.forEach(card => {
-        const match = filter === 'all' || card.dataset.sector === filter;
-        card.style.display = match ? 'flex' : 'none';
-        if (match) visible++;
-      });
-      listingMeta.textContent = filter === 'all'
-        ? 'Showing 8 of 128 issues'
-        : `Showing ${visible} issue${visible === 1 ? '' : 's'} in this sector`;
+      applyFilter(chip.dataset.filter);
     });
   });
 
-  const loadMoreBtn = document.getElementById('loadMoreBtn');
-  loadMoreBtn.addEventListener('click', () => {
-    loadMoreBtn.textContent = 'That\'s all for the beta — more issues added weekly';
-    loadMoreBtn.disabled = true;
-    loadMoreBtn.style.opacity = '0.6';
-    loadMoreBtn.style.cursor = 'default';
-  });
+  fetchIssues();
 </script>
 
 </body>
