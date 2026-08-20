@@ -137,6 +137,7 @@
   .foot-col a:hover{color:#fff;}
   .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:24px;font-size:13px;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -399,7 +400,9 @@
   }
 
   loadIssue();
-</script>
 
-</body>
-</html>
+  /* ---------- Realtime: live-update the issue and its discussion ---------- */
+  if(SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase && issueId){
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient
+      .channel(`issue-${issueId}-changes
