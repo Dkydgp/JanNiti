@@ -3,161 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Moderation — JanNiti</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-  * { box-sizing: border-box; }
+*{box-sizing:border-box}
 
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f7f4ed;
-    color: #0f172a;
-  }
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f7f4ed;
+  color:#0f172a;
+}
 
-  header {
-    background: #0f172a;
-    color: white;
-    padding: 18px 20px;
-  }
+header{
+  background:#0f172a;
+  color:#fff;
+  padding:18px 20px;
+}
 
-  header h1 {
-    margin: 0;
-    font-size: 22px;
-  }
+header h1{
+  margin:0;
+  font-size:22px;
+}
 
-  header p {
-    margin: 6px 0 0;
-    color: #94a3b8;
-    font-size: 13px;
-  }
+header p{
+  margin:6px 0 0;
+  color:#94a3b8;
+  font-size:13px;
+}
 
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 24px 16px 60px;
-  }
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:24px 16px 60px;
+}
 
-  .section {
-    margin-bottom: 35px;
-  }
+.login-card,
+.card{
+  background:#fff;
+  border:1px solid #e5e0d5;
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:16px;
+}
 
-  .section-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-  }
+.login-card{
+  max-width:430px;
+  margin:40px auto;
+}
 
-  .section-title h2 {
-    margin: 0;
-    font-size: 20px;
-  }
+h2{
+  margin:0 0 16px;
+}
 
-  .count {
-    background: #e2e8f0;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-  }
+label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin:14px 0 6px;
+}
 
-  .card {
-    background: white;
-    border: 1px solid #e5e0d5;
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 14px;
-  }
+input{
+  width:100%;
+  padding:12px;
+  border:1px solid #d7d1c5;
+  border-radius:7px;
+  font-size:15px;
+}
 
-  .card h3 {
-    margin: 0 0 8px;
-    font-size: 18px;
-  }
+button{
+  border:0;
+  border-radius:7px;
+  padding:10px 16px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-  .meta {
-    font-size: 12px;
-    color: #64748b;
-    margin-bottom: 12px;
-  }
+button:disabled{
+  opacity:.5;
+}
 
-  .text {
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 12px;
-    white-space: pre-wrap;
-  }
+.primary{
+  background:#2563eb;
+  color:#fff;
+}
 
-  .badge {
-    display: inline-block;
-    padding: 5px 9px;
-    border-radius: 5px;
-    background: #eef2ff;
-    color: #2563eb;
-    font-size: 11px;
-    font-weight: bold;
-    margin-right: 6px;
-  }
+.approve{
+  background:#0f7a3d;
+  color:#fff;
+}
 
-  .actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-  }
+.reject{
+  background:#dc2626;
+  color:#fff;
+}
 
-  button {
-    border: 0;
-    border-radius: 7px;
-    padding: 10px 16px;
-    font-weight: bold;
-    cursor: pointer;
-  }
+.logout{
+  background:#334155;
+  color:#fff;
+}
 
-  .approve {
-    background: #0f7a3d;
-    color: white;
-  }
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:24px;
+}
 
-  .reject {
-    background: #dc2626;
-    color: white;
-  }
+.section{
+  margin-bottom:35px;
+}
 
-  .refresh {
-    background: #2563eb;
-    color: white;
-  }
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
 
-  button:disabled {
-    opacity: 0.5;
-  }
+.section-title h2{
+  margin:0;
+  font-size:20px;
+}
 
-  .empty {
-    background: white;
-    border: 1px dashed #d6d0c4;
-    border-radius: 12px;
-    padding: 25px;
-    text-align: center;
-    color: #64748b;
-  }
+.count{
+  background:#e2e8f0;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
 
-  .loading {
-    text-align: center;
-    padding: 30px;
-    color: #64748b;
-  }
+.meta{
+  font-size:12px;
+  color:#64748b;
+  margin-bottom:12px;
+}
 
-  .error {
-    background: #fee2e2;
-    color: #991b1b;
-    padding: 14px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    display: none;
-  }
+.text{
+  font-size:14px;
+  line-height:1.6;
+  margin-bottom:12px;
+  white-space:pre-wrap;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:5px;
+  background:#eef2ff;
+  color:#2563eb;
+  font-size:11px;
+  font-weight:bold;
+  margin-right:6px;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:15px;
+}
+
+.empty,
+.loading{
+  background:#fff;
+  border-radius:12px;
+  padding:25px;
+  text-align:center;
+  color:#64748b;
+}
+
+.error{
+  background:#fee2e2;
+  color:#991b1b;
+  padding:14px;
+  border-radius:8px;
+  margin-bottom:20px;
+  display:none;
+}
+
+.success{
+  background:#dcfce7;
+  color:#166534;
+  padding:14px;
+  border-radius:8px;
+  margin-bottom:20px;
+  display:none;
+}
+
+#dashboard{
+  display:none;
+}
 </style>
 </head>
 
@@ -165,49 +205,151 @@
 
 <header>
   <h1>JanNiti Moderation</h1>
-  <p>Review pending issues and discussion contributions</p>
+  <p>Admin-only moderation dashboard</p>
 </header>
 
 <div class="container">
 
-  <div id="errorBox" class="error"></div>
+  <!-- LOGIN -->
 
-  <div style="margin-bottom:25px;">
-    <button class="refresh" onclick="loadEverything()">
-      Refresh
+  <div id="loginView" class="login-card">
+
+    <h2>Admin Login</h2>
+
+    <p style="color:#64748b;font-size:14px;">
+      Sign in with your JanNiti moderation account.
+    </p>
+
+    <label for="email">Email</label>
+
+    <input
+      id="email"
+      type="email"
+      autocomplete="email"
+      value="dipak1996@gmail.com"
+    >
+
+    <label for="password">Password</label>
+
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+    >
+
+    <button
+      id="loginBtn"
+      class="primary"
+      style="width:100%;margin-top:18px;"
+    >
+      Login
     </button>
+
+    <div
+      id="loginError"
+      class="error"
+      style="margin-top:15px;"
+    ></div>
+
   </div>
 
-  <!-- PENDING ISSUES -->
 
-  <section class="section">
+  <!-- DASHBOARD -->
 
-    <div class="section-title">
-      <h2>Pending Issues</h2>
-      <span class="count" id="issueCount">0</span>
+  <div id="dashboard">
+
+    <div class="topbar">
+
+      <div>
+        <strong id="adminEmail"></strong>
+
+        <div style="font-size:12px;color:#64748b;">
+          Administrator
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;">
+
+        <button
+          class="primary"
+          onclick="loadEverything()"
+        >
+          Refresh
+        </button>
+
+        <button
+          class="logout"
+          onclick="logout()"
+        >
+          Logout
+        </button>
+
+      </div>
+
     </div>
 
-    <div id="issues">
-      <div class="loading">Loading issues…</div>
-    </div>
 
-  </section>
+    <div id="errorBox" class="error"></div>
+
+    <div id="successBox" class="success"></div>
 
 
-  <!-- PENDING DISCUSSIONS -->
+    <!-- PENDING ISSUES -->
 
-  <section class="section">
+    <section class="section">
 
-    <div class="section-title">
-      <h2>Pending Discussions</h2>
-      <span class="count" id="contributionCount">0</span>
-    </div>
+      <div class="section-title">
 
-    <div id="contributions">
-      <div class="loading">Loading discussions…</div>
-    </div>
+        <h2>Pending Issues</h2>
 
-  </section>
+        <span
+          class="count"
+          id="issueCount"
+        >
+          0
+        </span>
+
+      </div>
+
+      <div id="issues">
+
+        <div class="loading">
+          Loading issues…
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PENDING DISCUSSIONS -->
+
+    <section class="section">
+
+      <div class="section-title">
+
+        <h2>Pending Discussions</h2>
+
+        <span
+          class="count"
+          id="contributionCount"
+        >
+          0
+        </span>
+
+      </div>
+
+      <div id="contributions">
+
+        <div class="loading">
+          Loading discussions…
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
 
 </div>
 
@@ -220,6 +362,7 @@ const SUPABASE_URL =
 const SUPABASE_ANON_KEY =
   "sb_publishable_NLwGwLhJ_kAgGvla9LIZgw_NlnBjiUa";
 
+
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
@@ -227,17 +370,219 @@ const supabaseClient =
   );
 
 
+const loginView =
+  document.getElementById("loginView");
+
+const dashboard =
+  document.getElementById("dashboard");
+
+const loginBtn =
+  document.getElementById("loginBtn");
+
+const loginError =
+  document.getElementById("loginError");
+
+const errorBox =
+  document.getElementById("errorBox");
+
+const successBox =
+  document.getElementById("successBox");
+
+
 /* =========================
-   ERROR
+   LOGIN ERROR
 ========================= */
 
-function showError(message) {
+function showLoginError(message){
 
-  const box =
-    document.getElementById("errorBox");
+  loginError.textContent = message;
 
-  box.textContent = message;
-  box.style.display = "block";
+  loginError.style.display = "block";
+
+}
+
+
+/* =========================
+   DASHBOARD ERROR
+========================= */
+
+function showError(message){
+
+  errorBox.textContent = message;
+
+  errorBox.style.display = "block";
+
+}
+
+
+/* =========================
+   SUCCESS MESSAGE
+========================= */
+
+function showSuccess(message){
+
+  successBox.textContent = message;
+
+  successBox.style.display = "block";
+
+  setTimeout(() => {
+
+    successBox.style.display = "none";
+
+  }, 3000);
+
+}
+
+
+/* =========================
+   CHECK ADMIN
+========================= */
+
+async function checkAdmin(){
+
+  const {
+    data: { user }
+  } = await supabaseClient.auth.getUser();
+
+
+  if(!user){
+
+    loginView.style.display = "block";
+
+    dashboard.style.display = "none";
+
+    return false;
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+    .from("admin_users")
+    .select("user_id,email")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+
+  if(error){
+
+    console.error(error);
+
+    showLoginError(
+      "Admin verification failed: " +
+      error.message
+    );
+
+    await supabaseClient.auth.signOut();
+
+    return false;
+
+  }
+
+
+  if(!data){
+
+    showLoginError(
+      "This account is not authorized as a JanNiti admin."
+    );
+
+    await supabaseClient.auth.signOut();
+
+    return false;
+
+  }
+
+
+  document.getElementById(
+    "adminEmail"
+  ).textContent =
+    user.email || data.email;
+
+
+  loginView.style.display = "none";
+
+  dashboard.style.display = "block";
+
+
+  await loadEverything();
+
+  return true;
+
+}
+
+
+/* =========================
+   LOGIN
+========================= */
+
+loginBtn.addEventListener(
+  "click",
+  async () => {
+
+    loginError.style.display = "none";
+
+    loginBtn.disabled = true;
+
+    loginBtn.textContent = "Signing in…";
+
+
+    const email =
+      document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+      document
+        .getElementById("password")
+        .value;
+
+
+    const {
+      error
+    } =
+      await supabaseClient.auth.signInWithPassword({
+
+        email,
+
+        password
+
+      });
+
+
+    loginBtn.disabled = false;
+
+    loginBtn.textContent = "Login";
+
+
+    if(error){
+
+      showLoginError(error.message);
+
+      return;
+
+    }
+
+
+    await checkAdmin();
+
+  }
+);
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
 }
 
 
@@ -245,14 +590,16 @@ function showError(message) {
    LOAD EVERYTHING
 ========================= */
 
-async function loadEverything() {
+async function loadEverything(){
 
-  document.getElementById("errorBox").style.display =
-    "none";
+  errorBox.style.display = "none";
 
   await Promise.all([
+
     loadIssues(),
+
     loadContributions()
+
   ]);
 
 }
@@ -262,26 +609,31 @@ async function loadEverything() {
    LOAD PENDING ISSUES
 ========================= */
 
-async function loadIssues() {
+async function loadIssues(){
 
   const container =
     document.getElementById("issues");
 
+
   container.innerHTML =
     '<div class="loading">Loading issues…</div>';
 
-  const { data, error } =
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("issues")
       .select("*")
-      .eq("status", "pending")
-      .order("created_at", {
-        ascending: false
-      });
+      .eq("status","pending")
+      .order(
+        "created_at",
+        { ascending:false }
+      );
 
-  if (error) {
 
-    console.error(error);
+  if(error){
 
     showError(
       "Could not load pending issues: " +
@@ -289,18 +641,24 @@ async function loadIssues() {
     );
 
     return;
+
   }
 
-  document.getElementById("issueCount")
-    .textContent = data.length;
 
-  if (data.length === 0) {
+  document.getElementById(
+    "issueCount"
+  ).textContent = data.length;
+
+
+  if(!data.length){
 
     container.innerHTML =
       '<div class="empty">No pending issues.</div>';
 
     return;
+
   }
+
 
   container.innerHTML =
     data.map(issue => `
@@ -308,13 +666,17 @@ async function loadIssues() {
       <div class="card">
 
         <h3>
-          ${escapeHtml(issue.title || "Untitled")}
+          ${escapeHtml(
+            issue.title || "Untitled"
+          )}
         </h3>
 
         <div class="meta">
 
           <span class="badge">
-            ${escapeHtml(issue.sector || "Other")}
+            ${escapeHtml(
+              issue.sector || "Other"
+            )}
           </span>
 
           ${escapeHtml(
@@ -329,54 +691,92 @@ async function loadIssues() {
 
         </div>
 
+
         <div class="text">
+
           ${escapeHtml(
             issue.description || ""
           )}
+
         </div>
+
 
         ${
           issue.solution
-          ? `
-            <div class="text">
-              <strong>Proposed solution:</strong><br>
-              ${escapeHtml(issue.solution)}
-            </div>
+          ?
           `
-          : ""
+          <div class="text">
+
+            <strong>
+              Proposed solution:
+            </strong>
+
+            <br>
+
+            ${escapeHtml(
+              issue.solution
+            )}
+
+          </div>
+          `
+          :
+          ""
         }
+
 
         ${
           issue.evidence_url
-          ? `
-            <div class="text">
-              <strong>Evidence:</strong><br>
-              <a href="${escapeAttr(issue.evidence_url)}"
-                 target="_blank">
-                View evidence
-              </a>
-            </div>
+          ?
           `
-          : ""
+          <div class="text">
+
+            <strong>
+              Evidence:
+            </strong>
+
+            <br>
+
+            <a
+              href="${escapeAttr(
+                issue.evidence_url
+              )}"
+              target="_blank"
+              rel="noopener"
+            >
+              View evidence
+            </a>
+
+          </div>
+          `
+          :
+          ""
         }
+
 
         <div class="actions">
 
           <button
             class="approve"
-            onclick="updateIssue(
-              '${issue.id}',
-              'live'
-            )">
+            onclick="
+              updateIssue(
+                '${issue.id}',
+                'live'
+              )
+            "
+          >
             ✓ Approve
           </button>
 
+
           <button
             class="reject"
-            onclick="updateIssue(
-              '${issue.id}',
-              'closed'
-            )">
+            onclick="
+              updateIssue(
+                '${issue.id}',
+                'closed'
+              )
+            "
+          >
             ✕ Reject
           </button>
 
@@ -393,26 +793,33 @@ async function loadIssues() {
    LOAD PENDING CONTRIBUTIONS
 ========================= */
 
-async function loadContributions() {
+async function loadContributions(){
 
   const container =
-    document.getElementById("contributions");
+    document.getElementById(
+      "contributions"
+    );
+
 
   container.innerHTML =
     '<div class="loading">Loading discussions…</div>';
 
-  const { data, error } =
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("contributions")
       .select("*")
-      .eq("status", "pending")
-      .order("created_at", {
-        ascending: false
-      });
+      .eq("status","pending")
+      .order(
+        "created_at",
+        { ascending:false }
+      );
 
-  if (error) {
 
-    console.error(error);
+  if(error){
 
     showError(
       "Could not load pending discussions: " +
@@ -420,95 +827,131 @@ async function loadContributions() {
     );
 
     return;
+
   }
 
-  document.getElementById("contributionCount")
-    .textContent = data.length;
 
-  if (data.length === 0) {
+  document.getElementById(
+    "contributionCount"
+  ).textContent = data.length;
+
+
+  if(!data.length){
 
     container.innerHTML =
       '<div class="empty">No pending discussions.</div>';
 
     return;
+
   }
 
+
   container.innerHTML =
-    data.map(contribution => `
+    data.map(c => `
 
       <div class="card">
 
         <h3>
           ${escapeHtml(
-            contribution.type || "Contribution"
+            c.type || "Contribution"
           )}
         </h3>
+
 
         <div class="meta">
 
           <span class="badge">
+
             ${escapeHtml(
-              contribution.type || "discussion"
+              c.type || "discussion"
             )}
+
           </span>
 
           ${escapeHtml(
-            contribution.display_name || "Anonymous"
+            c.display_name || "Anonymous"
           )}
 
           ·
 
           ${escapeHtml(
-            contribution.email || ""
+            c.email || ""
           )}
 
         </div>
+
 
         <div class="text">
+
           ${escapeHtml(
-            contribution.text || ""
+            c.text || ""
           )}
+
         </div>
+
 
         ${
-          contribution.link
-          ? `
-            <div class="text">
-              <strong>Supporting evidence:</strong><br>
-              <a
-                href="${escapeAttr(contribution.link)}"
-                target="_blank">
-                Open source
-              </a>
-            </div>
+          c.link
+          ?
           `
-          : ""
+          <div class="text">
+
+            <strong>
+              Supporting evidence:
+            </strong>
+
+            <br>
+
+            <a
+              href="${escapeAttr(c.link)}"
+              target="_blank"
+              rel="noopener"
+            >
+              Open source
+            </a>
+
+          </div>
+          `
+          :
+          ""
         }
 
+
         <div class="meta">
+
           Issue ID:
+
           ${escapeHtml(
-            contribution.issue_id
+            c.issue_id || ""
           )}
+
         </div>
+
 
         <div class="actions">
 
           <button
             class="approve"
-            onclick="updateContribution(
-              '${contribution.id}',
-              'approved'
-            )">
+            onclick="
+              updateContribution(
+                '${c.id}',
+                'approved'
+              )
+            "
+          >
             ✓ Approve
           </button>
 
+
           <button
             class="reject"
-            onclick="updateContribution(
-              '${contribution.id}',
-              'rejected'
-            )">
+            onclick="
+              updateContribution(
+                '${c.id}',
+                'rejected'
+              )
+            "
+          >
             ✕ Reject
           </button>
 
@@ -522,12 +965,17 @@ async function loadContributions() {
 
 
 /* =========================
-   APPROVE / REJECT ISSUE
+   UPDATE ISSUE
 ========================= */
 
-async function updateIssue(id, status) {
+async function updateIssue(
+  id,
+  status
+){
 
-  const { error } =
+  const {
+    error
+  } =
     await supabaseClient
       .from("issues")
       .update({
@@ -535,31 +983,43 @@ async function updateIssue(id, status) {
       })
       .eq("id", id);
 
-  if (error) {
 
-    alert(
+  if(error){
+
+    showError(
       "Could not update issue: " +
       error.message
     );
 
     return;
+
   }
 
-  await loadEverything();
+
+  showSuccess(
+    status === "live"
+      ? "Issue approved."
+      : "Issue rejected."
+  );
+
+
+  await loadIssues();
 
 }
 
 
 /* =========================
-   APPROVE / REJECT CONTRIBUTION
+   UPDATE CONTRIBUTION
 ========================= */
 
 async function updateContribution(
   id,
   status
-) {
+){
 
-  const { error } =
+  const {
+    error
+  } =
     await supabaseClient
       .from("contributions")
       .update({
@@ -567,38 +1027,59 @@ async function updateContribution(
       })
       .eq("id", id);
 
-  if (error) {
 
-    alert(
+  if(error){
+
+    showError(
       "Could not update contribution: " +
       error.message
     );
 
     return;
+
   }
 
-  await loadEverything();
+
+  showSuccess(
+    status === "approved"
+      ? "Discussion approved."
+      : "Discussion rejected."
+  );
+
+
+  await loadContributions();
 
 }
 
 
 /* =========================
-   SECURITY HELPERS
+   HTML SECURITY
 ========================= */
 
-function escapeHtml(value) {
+function escapeHtml(value){
 
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+
+    .replaceAll("&","&amp;")
+
+    .replaceAll("<","&lt;")
+
+    .replaceAll(">","&gt;")
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
-function escapeAttr(value) {
+function escapeAttr(value){
 
   return escapeHtml(value);
 
@@ -606,10 +1087,23 @@ function escapeAttr(value) {
 
 
 /* =========================
+   AUTH STATE
+========================= */
+
+supabaseClient.auth.onAuthStateChange(
+  () => {
+
+    checkAdmin();
+
+  }
+);
+
+
+/* =========================
    START
 ========================= */
 
-loadEverything();
+checkAdmin();
 
 </script>
 
