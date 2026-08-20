@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Moderation — JanNiti</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f4ed;
+    color: #0f172a;
+  }
+
+  header {
+    background: #0f172a;
+    color: white;
+    padding: 18px 20px;
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 22px;
+  }
+
+  header p {
+    margin: 6px 0 0;
+    color: #94a3b8;
+    font-size: 13px;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  .section {
+    margin-bottom: 35px;
+  }
+
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .section-title h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+
+  .count {
+    background: #e2e8f0;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid #e5e0d5;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+
+  .card h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+  }
+
+  .meta {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 12px;
+  }
+
+  .text {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    white-space: pre-wrap;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 5px;
+    background: #eef2ff;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: bold;
+    margin-right: 6px;
+  }
+
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  button {
+    border: 0;
+    border-radius: 7px;
+    padding: 10px 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .approve {
+    background: #0f7a3d;
+    color: white;
+  }
+
+  .reject {
+    background: #dc2626;
+    color: white;
+  }
+
+  .refresh {
+    background: #2563eb;
+    color: white;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+  }
+
+  .empty {
+    background: white;
+    border: 1px dashed #d6d0c4;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    color: #64748b;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 30px;
+    color: #64748b;
+  }
+
+  .error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: none;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>JanNiti Moderation</h1>
+  <p>Review pending issues and discussion contributions</p>
+</header>
+
+<div class="container">
+
+  <div id="errorBox" class="error"></div>
+
+  <div style="margin-bottom:25px;">
+    <button class="refresh" onclick="loadEverything()">
+      Refresh
+    </button>
+  </div>
+
+  <!-- PENDING ISSUES -->
+
+  <section class="section">
+
+    <div class="section-title">
+      <h2>Pending Issues</h2>
+      <span class="count" id="issueCount">0</span>
+    </div>
+
+    <div id="issues">
+      <div class="loading">Loading issues…</div>
+    </div>
+
+  </section>
+
+
+  <!-- PENDING DISCUSSIONS -->
+
+  <section class="section">
+
+    <div class="section-title">
+      <h2>Pending Discussions</h2>
+      <span class="count" id="contributionCount">0</span>
+    </div>
+
+    <div id="contributions">
+      <div class="loading">Loading discussions…</div>
+    </div>
+
+  </section>
+
+</div>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://bjjaavkwpgmuqhzndrcy.supabase.co";
+
+const SUPABASE_ANON_KEY =
+  "sb_publishable_NLwGwLhJ_kAgGvla9LIZgw_NlnBjiUa";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+
+
+/* =========================
+   ERROR
+========================= */
+
+function showError(message) {
+
+  const box =
+    document.getElementById("errorBox");
+
+  box.textContent = message;
+  box.style.display = "block";
+}
+
+
+/* =========================
+   LOAD EVERYTHING
+========================= */
+
+async function loadEverything() {
+
+  document.getElementById("errorBox").style.display =
+    "none";
+
+  await Promise.all([
+    loadIssues(),
+    loadContributions()
+  ]);
+
+}
+
+
+/* =========================
+   LOAD PENDING ISSUES
+========================= */
+
+async function loadIssues() {
+
+  const container =
+    document.getElementById("issues");
+
+  container.innerHTML =
+    '<div class="loading">Loading issues…</div>';
+
+  const { data, error } =
+    await supabaseClient
+      .from("issues")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", {
+        ascending: false
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    showError(
+      "Could not load pending issues: " +
+      error.message
+    );
+
+    return;
+  }
+
+  document.getElementById("issueCount")
+    .textContent = data.length;
+
+  if (data.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">No pending issues.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    data.map(issue => `
+
+      <div class="card">
+
+        <h3>
+          ${escapeHtml(issue.title || "Untitled")}
+        </h3>
+
+        <div class="meta">
+
+          <span class="badge">
+            ${escapeHtml(issue.sector || "Other")}
+          </span>
+
+          ${escapeHtml(
+            issue.display_name || "Anonymous"
+          )}
+
+          ·
+
+          ${escapeHtml(
+            issue.email || ""
+          )}
+
+        </div>
+
+        <div class="text">
+          ${escapeHtml(
+            issue.description || ""
+          )}
+        </div>
+
+        ${
+          issue.solution
+          ? `
+            <div class="text">
+              <strong>Proposed solution:</strong><br>
+              ${escapeHtml(issue.solution)}
+            </div>
+          `
+          : ""
+        }
+
+        ${
+          issue.evidence_url
+          ? `
+            <div class="text">
+              <strong>Evidence:</strong><br>
+              <a href="${escapeAttr(issue.evidence_url)}"
+                 target="_blank">
+                View evidence
+              </a>
+            </div>
+          `
+          : ""
+        }
+
+        <div class="actions">
+
+          <button
+            class="approve"
+            onclick="updateIssue(
+              '${issue.id}',
+              'live'
+            )">
+            ✓ Approve
+          </button>
+
+          <button
+            class="reject"
+            onclick="updateIssue(
+              '${issue.id}',
+              'closed'
+            )">
+            ✕ Reject
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================
+   LOAD PENDING CONTRIBUTIONS
+========================= */
+
+async function loadContributions() {
+
+  const container =
+    document.getElementById("contributions");
+
+  container.innerHTML =
+    '<div class="loading">Loading discussions…</div>';
+
+  const { data, error } =
+    await supabaseClient
+      .from("contributions")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", {
+        ascending: false
+      });
+
+  if (error) {
+
+    console.error(error);
+
+    showError(
+      "Could not load pending discussions: " +
+      error.message
+    );
+
+    return;
+  }
+
+  document.getElementById("contributionCount")
+    .textContent = data.length;
+
+  if (data.length === 0) {
+
+    container.innerHTML =
+      '<div class="empty">No pending discussions.</div>';
+
+    return;
+  }
+
+  container.innerHTML =
+    data.map(contribution => `
+
+      <div class="card">
+
+        <h3>
+          ${escapeHtml(
+            contribution.type || "Contribution"
+          )}
+        </h3>
+
+        <div class="meta">
+
+          <span class="badge">
+            ${escapeHtml(
+              contribution.type || "discussion"
+            )}
+          </span>
+
+          ${escapeHtml(
+            contribution.display_name || "Anonymous"
+          )}
+
+          ·
+
+          ${escapeHtml(
+            contribution.email || ""
+          )}
+
+        </div>
+
+        <div class="text">
+          ${escapeHtml(
+            contribution.text || ""
+          )}
+        </div>
+
+        ${
+          contribution.link
+          ? `
+            <div class="text">
+              <strong>Supporting evidence:</strong><br>
+              <a
+                href="${escapeAttr(contribution.link)}"
+                target="_blank">
+                Open source
+              </a>
+            </div>
+          `
+          : ""
+        }
+
+        <div class="meta">
+          Issue ID:
+          ${escapeHtml(
+            contribution.issue_id
+          )}
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="approve"
+            onclick="updateContribution(
+              '${contribution.id}',
+              'approved'
+            )">
+            ✓ Approve
+          </button>
+
+          <button
+            class="reject"
+            onclick="updateContribution(
+              '${contribution.id}',
+              'rejected'
+            )">
+            ✕ Reject
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+/* =========================
+   APPROVE / REJECT ISSUE
+========================= */
+
+async function updateIssue(id, status) {
+
+  const { error } =
+    await supabaseClient
+      .from("issues")
+      .update({
+        status: status
+      })
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Could not update issue: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadEverything();
+
+}
+
+
+/* =========================
+   APPROVE / REJECT CONTRIBUTION
+========================= */
+
+async function updateContribution(
+  id,
+  status
+) {
+
+  const { error } =
+    await supabaseClient
+      .from("contributions")
+      .update({
+        status: status
+      })
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Could not update contribution: " +
+      error.message
+    );
+
+    return;
+  }
+
+  await loadEverything();
+
+}
+
+
+/* =========================
+   SECURITY HELPERS
+========================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+function escapeAttr(value) {
+
+  return escapeHtml(value);
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadEverything();
+
+</script>
+
+</body>
+</html>
