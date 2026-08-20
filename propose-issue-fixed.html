@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propose an Issue — JanNiti</title>
+<meta name="description" content="Raise a public-policy problem on JanNiti. We only ask for what's needed to follow up with you — nothing more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F172A;
+    --ink-soft:#1E293B;
+    --paper:#FBF7EF;
+    --paper-card:#FFFFFF;
+    --line:#E7E0D2;
+    --saffron:#FF9933;
+    --blue:#2563EB;
+    --green:#0F7A3D;
+    --muted:#6B7280;
+    --muted-on-dark:#9AA6B8;
+    --max:1180px;
+    --form-max:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;}
+  .form-wrap{max-width:var(--form-max);margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:12px;
+    font-weight:700;
+    color:var(--saffron);
+    display:block;
+  }
+  @media(prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline:2px solid var(--blue);
+    outline-offset:2px;
+    border-radius:4px;
+  }
+
+  /* ---------- HEADER (shared) ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(15,23,42,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav-inner{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 28px;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:700;
+    color:#fff;
+  }
+  .brand .mark{
+    width:11px;height:11px;border-radius:50%;
+    background:var(--saffron);
+    box-shadow:14px 0 0 var(--blue), 28px 0 0 var(--green);
+    margin-right:20px;
+  }
+  nav.links{display:flex;align-items:center;gap:36px;}
+  nav.links a{color:#CBD5E1;font-size:14.5px;font-weight:600;transition:color .15s ease;}
+  nav.links a:hover{color:#fff;}
+  .nav-cta{background:var(--saffron);color:#1a0f00;padding:10px 20px;border-radius:7px;font-weight:700;font-size:14px;}
+  .nav-cta:hover{background:#ffb35c;}
+  .menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,0.25);border-radius:7px;color:#fff;width:42px;height:38px;font-size:18px;cursor:pointer;}
+  @media(max-width:900px){
+    nav.links{position:fixed;top:72px;left:0;right:0;background:#0F172A;flex-direction:column;align-items:flex-start;gap:0;padding:8px 28px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:none;}
+    nav.links.open{display:flex;}
+    nav.links a{padding:14px 0;width:100%;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .nav-cta{margin-top:14px;text-align:center;}
+    .menu-btn{display:block;}
+  }
+
+  /* ---------- PAGE HERO ---------- */
+  .page-hero{
+    background:
+      radial-gradient(ellipse 800px 400px at 90% -20%, rgba(255,153,51,0.22), transparent 60%),
+      var(--ink);
+    color:#fff;
+    padding:60px 0 44px;
+  }
+  .breadcrumb{font-size:13px;color:var(--muted-on-dark);margin-bottom:18px;}
+  .breadcrumb a{color:var(--muted-on-dark);}
+  .breadcrumb a:hover{color:#fff;}
+  .page-hero h1{font-size:clamp(30px,4vw,42px);color:#fff;line-height:1.1;}
+  .page-hero p{font-size:16px;color:var(--muted-on-dark);max-width:560px;margin-top:14px;line-height:1.6;}
+
+  /* ---------- FORM SECTION ---------- */
+  .form-section{padding:56px 0 40px;}
+  .progress-note{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:28px;
+  }
+  .progress-note .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+  fieldset{
+    border:none;
+    margin:0 0 40px;
+    padding:0;
+  }
+  legend{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:600;
+    margin-bottom:6px;
+    padding:0;
+  }
+  .legend-sub{font-size:13.5px;color:var(--muted);margin-bottom:22px;}
+
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:7px;
+    color:var(--ink-soft);
+  }
+  .field .optional{
+    font-weight:600;
+    color:var(--muted);
+    text-transform:none;
+    letter-spacing:0;
+    font-size:12.5px;
+  }
+  .field .hint{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-top:6px;
+    line-height:1.5;
+  }
+  input[type="text"], input[type="email"], input[type="url"], select, textarea{
+    width:100%;
+    padding:13px 14px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:var(--paper-card);
+    font-family:inherit;
+    font-size:15px;
+    color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:110px;line-height:1.55;}
+  input::placeholder, textarea::placeholder{color:#A9A296;}
+
+  .radio-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .radio-chip{
+    flex:1;
+    min-width:140px;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper-card);
+    cursor:pointer;
+    position:relative;
+  }
+  .radio-chip input{position:absolute;opacity:0;}
+  .radio-chip span{font-size:14px;font-weight:600;}
+  .radio-chip small{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
+  .radio-chip:has(input:checked){border-color:var(--blue);background:#EEF3FE;}
+
+  /* ---------- MODE SELECTOR ---------- */
+  .mode-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:8px;
+    display:flex;
+    gap:8px;
+    margin-bottom:36px;
+  }
+  .mode-option{
+    flex:1;
+    padding:18px 20px;
+    border-radius:10px;
+    cursor:pointer;
+    position:relative;
+    transition:background .15s ease;
+  }
+  .mode-option input{position:absolute;opacity:0;}
+  .mode-option .mo-title{
+    font-family:'Fraunces', serif;
+    font-size:16.5px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .mode-option .mo-title .radio-dot{
+    width:16px;height:16px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    flex-shrink:0;
+    position:relative;
+  }
+  .mode-option .mo-desc{font-size:13px;color:var(--muted);margin-top:5px;line-height:1.5;}
+  .mode-option:has(input:checked){background:#EEF3FE;}
+  .mode-option:has(input:checked) .radio-dot{border-color:var(--blue);}
+  .mode-option:has(input:checked) .radio-dot::after{
+    content:"";
+    position:absolute;
+    inset:3px;
+    border-radius:50%;
+    background:var(--blue);
+  }
+  @media(max-width:640px){.mode-card{flex-direction:column;}}
+
+  /* existing-issue search/select */
+  .existing-picker{
+    background:#F1EEE4;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:20px 22px;
+    margin-bottom:24px;
+  }
+  .existing-picker .field{margin-bottom:0;}
+  .search-wrap{position:relative;}
+  .search-wrap input{padding-left:38px;}
+  .search-wrap .s-icon{
+    position:absolute;
+    left:13px;top:50%;
+    transform:translateY(-50%);
+    color:var(--muted);
+    font-size:14px;
+    pointer-events:none;
+  }
+  .issue-results{
+    margin-top:10px;
+    max-height:260px;
+    overflow-y:auto;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--paper-card);
+  }
+  .issue-result{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    padding:13px 15px;
+    border-bottom:1px solid var(--line);
+    cursor:pointer;
+  }
+  .issue-result:last-child{border-bottom:none;}
+  .issue-result:hover{background:var(--paper);}
+  .issue-result.selected{background:#EEF3FE;}
+  .issue-result .ir-title{font-size:14px;font-weight:600;line-height:1.4;}
+  .issue-result .ir-meta{font-size:12px;color:var(--muted);margin-top:4px;}
+  .issue-result .ir-tag{
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--green);
+    background:#E7F4EC;
+    padding:3px 8px;
+    border-radius:5px;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .no-results{padding:16px;font-size:13.5px;color:var(--muted);text-align:center;}
+  .selected-issue-banner{
+    display:none;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:#EEF3FE;
+    border:1px solid #C7D9FA;
+    border-radius:8px;
+    padding:13px 16px;
+    margin-top:12px;
+    font-size:13.5px;
+  }
+  .selected-issue-banner strong{display:block;font-weight:800;margin-top:3px;}
+  .selected-issue-banner small{display:block;color:var(--muted);margin-top:4px;font-size:12px;}
+  .selected-issue-banner button{
+    background:none;
+    border:none;
+    color:var(--blue);
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+    flex-shrink:0;
+  }
+  .contribution-type-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+  .existing-only-hidden{display:none !important;}
+  .existing-mode-note{
+    background:#EEF3FE;border:1px solid #C7D9FA;border-radius:10px;
+    padding:14px 16px;margin-bottom:22px;color:var(--ink-soft);font-size:13.5px;line-height:1.55;
+  }
+
+  /* privacy card */
+  .privacy-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px 26px;
+    margin-bottom:36px;
+  }
+  .privacy-card h3{font-size:16.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .privacy-card h3 .badge{
+    width:20px;height:20px;
+    border-radius:50%;
+    background:var(--green);
+    color:#fff;
+    font-size:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .privacy-list{margin:0;padding:0;list-style:none;}
+  .privacy-list li{
+    display:flex;
+    gap:10px;
+    font-size:14px;
+    color:var(--muted);
+    line-height:1.55;
+    margin-bottom:10px;
+  }
+  .privacy-list li:last-child{margin-bottom:0;}
+  .privacy-list li .icon{color:var(--green);font-weight:700;flex-shrink:0;}
+  .privacy-list li.no .icon{color:#C0392B;}
+
+  .consent-row{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    margin-bottom:28px;
+  }
+  .consent-row input{margin-top:4px;flex-shrink:0;width:16px;height:16px;}
+  .consent-row label{font-size:13.5px;color:var(--muted);line-height:1.55;}
+  .consent-row a{color:var(--blue);font-weight:600;}
+
+  .form-actions{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 28px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--ink);color:#fff;}
+  .btn-primary:hover{background:var(--ink-soft);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+  .form-note{font-size:12.5px;color:var(--muted);}
+
+  /* success state */
+  .success-panel{
+    display:none;
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:48px 36px;
+    text-align:center;
+  }
+  .success-panel .check{
+    width:52px;height:52px;
+    border-radius:50%;
+    background:#E7F4EC;
+    color:var(--green);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    margin:0 auto 20px;
+  }
+  .success-panel h2{font-size:22px;margin-bottom:10px;}
+  .success-panel p{font-size:15px;color:var(--muted);line-height:1.6;max-width:440px;margin:0 auto;}
+  .success-panel .btn{margin-top:26px;}
+
+  /* ---------- FOOTER (shared) ---------- */
+  footer{background:var(--ink);color:var(--muted-on-dark);padding:56px 0 32px;border-top:1px solid rgba(255,255,255,0.08);margin-top:40px;}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:32px;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .foot-brand{max-width:320px;}
+  .foot-brand .brand{color:#fff;margin-bottom:12px;}
+  .foot-brand p{font-size:14px;line-height:1.6;color:var(--muted-on-dark);}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap;}
+  .foot-col h5{font-size:12.5px;text-transform:uppercase;letter-spacing:0.08em;color:#fff;margin-bottom:14px;}
+  .foot-col a{display:block;font-size:14px;color:var(--muted-on-dark);margin-bottom:10px;}
+  .foot-col a:hover{color:#fff;}
+  .foot-bottom{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding-top:24px;font-size:13px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="mark"></span>JanNiti</a>
+    <nav class="links" id="navLinks">
+      <a href="trending-issues.html">Trending Issues</a>
+      <a href="trending-sectors.html">Trending Sectors</a>
+      <a href="shout-outs.html">Shout Outs</a>
+      <a href="index.html#how-it-works">How It Works</a>
+      <a href="index.html#subscribe">Subscribe</a>
+      <a href="index.html#more">More</a>
+      <a href="propose-issue.html" class="nav-cta">Propose an Idea</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Propose an Issue</div>
+    <h1>Propose an Issue</h1>
+    <p>Raise a new public problem, or add evidence and perspective to a discussion that's already happening. Either way, we ask for the minimum needed to follow up with you — nothing more.</p>
+  </div>
+</section>
+
+<section class="form-section">
+  <div class="form-wrap">
+
+    <div class="progress-note"><span class="dot"></span> Takes about 4 minutes · No login required</div>
+
+    <form id="issueForm">
+
+      <fieldset>
+        <legend>Start here</legend>
+        <p class="legend-sub">Is this a brand-new problem, or does it belong to a discussion that's already happening?</p>
+
+        <div class="mode-card">
+          <label class="mode-option">
+            <input type="radio" name="mode" value="new" checked>
+            <div class="mo-title"><span class="radio-dot"></span>New issue</div>
+            <div class="mo-desc">Nobody's raised this on JanNiti yet.</div>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="mode" value="existing">
+            <div class="mo-title"><span class="radio-dot"></span>Add to an ongoing discussion</div>
+            <div class="mo-desc">This is related to an issue already being discussed.</div>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset id="newIssueFields">
+        <legend>The issue</legend>
+        <p class="legend-sub">This part is public — it's what other citizens will read and discuss.</p>
+
+        <div class="field">
+          <label for="title">Issue title</label>
+          <input type="text" id="title" name="title" placeholder="e.g. Should toll plazas disclose their concession period?" maxlength="140">
+        </div>
+
+        <div class="field">
+          <label for="sector">Sector</label>
+          <select id="sector" name="sector">
+            <option value="" disabled selected>Choose the closest fit</option>
+            <option value="infra">Infrastructure</option>
+            <option value="gov">Governance</option>
+            <option value="services">Public Services</option>
+            <option value="env">Environment</option>
+            <option value="edu">Education</option>
+            <option value="health">Health</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="description">What's the problem?</label>
+          <textarea id="description" name="description" placeholder="Describe the problem as you've experienced or observed it. What's happening, and why does it matter?"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="evidence">Link to supporting evidence <span class="optional">(optional)</span></label>
+          <input type="url" id="evidence" name="evidence" placeholder="News article, government document, official notification, etc.">
+          <p class="hint">You'll be able to add more evidence and documents after submitting, as the discussion develops.</p>
+        </div>
+
+        <div class="field">
+          <label for="solution">A possible solution <span class="optional">(optional)</span></label>
+          <textarea id="solution" name="solution" placeholder="If you already have an idea for how this could be fixed, share it — other citizens and experts can refine it."></textarea>
+        </div>
+      </fieldset>
+
+      <fieldset id="existingIssueFields" style="display:none;">
+        <legend>Find the discussion</legend>
+        <p class="legend-sub">Search for the issue you'd like to add to.</p>
+
+        <div class="existing-picker">
+          <div class="field" id="issuePickerField">
+            <label for="issueSearch">Find the discussion</label>
+            <div class="search-wrap">
+              <span class="s-icon">⌕</span>
+              <input type="text" id="issueSearch" placeholder="Search an issue by title or sector">
+            </div>
+            <div class="issue-results" id="issueResults"></div>
+          </div>
+
+          <div class="selected-issue-banner" id="selectedBanner">
+            <div>
+              <span>Adding to discussion:</span>
+              <strong id="selectedTitle"></strong>
+              <small id="selectedMeta"></small>
+            </div>
+            <button type="button" id="clearSelected">Change</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="contribText">Your solution / contribution</label>
+          <textarea id="contribText" name="contribText"
+            placeholder="Add your solution, perspective, experience or other useful contribution to this issue."></textarea>
+        </div>
+
+        <div class="field">
+          <label for="contribLink">Supporting evidence <span class="optional">(optional)</span></label>
+          <input type="url" id="contribLink" name="contribLink"
+            placeholder="News article, government document, official source, data, etc.">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>About you</legend>
+        <p class="legend-sub">This part is private. It's used only to verify your submission and follow up if needed.</p>
+
+        <div class="field">
+          <label for="displayName">Display name <span class="optional">(optional)</span></label>
+          <input type="text" id="displayName" name="displayName" placeholder="How you'd like to appear publicly — leave blank to post anonymously" maxlength="60">
+          <p class="hint">If left blank, your issue is posted as "Anonymous citizen."</p>
+        </div>
+
+        <div class="field">
+          <label for="email">Email address</label>
+          <input type="email" id="email" name="email" placeholder="you@email.com" required>
+          <p class="hint">Used only to confirm your submission and notify you of major updates to this issue. Never shown publicly, never sold.</p>
+        </div>
+
+        <div class="field">
+          <label>Are you affected by this issue personally, or reporting on behalf of others?</label>
+          <div class="radio-row">
+            <label class="radio-chip">
+              <input type="radio" name="capacity" value="personal" checked>
+              <span>Personally affected</span>
+              <small>You've experienced this directly</small>
+            </label>
+            <label class="radio-chip">
+              <input type="radio" name="capacity" value="observer">
+              <span>Concerned citizen</span>
+              <small>You've observed or researched it</small>
+            </label>
+            <label class="radio-chip">
+              <input type="radio" name="capacity" value="expert">
+              <span>Subject expert</span>
+              <small>Legal, policy or domain expertise</small>
+            </label>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="background">Relevant background or expertise <span class="optional">(optional)</span></label>
+          <input type="text" id="background" name="background" placeholder="e.g. Civil engineer, Practicing advocate, Public policy graduate" maxlength="80">
+          <p class="hint">Self-declared — not verified in beta. If you add this, a small badge appears next to your name on this contribution, so other citizens can see it may come from domain experience. Leave blank and nothing is shown.</p>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;">
+            <input type="checkbox" id="showBackground" name="showBackground" checked style="width:16px;height:16px;">
+            Show this badge publicly on my contribution
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="state">State / UT <span class="optional">(optional)</span></label>
+          <input type="text" id="state" name="state" placeholder="e.g. Maharashtra">
+          <p class="hint">Helps route the proposal to the right authority later. No city, address or pin code needed.</p>
+        </div>
+      </fieldset>
+
+      <div class="privacy-card">
+        <h3><span class="badge">✓</span>What we collect, and what we don't</h3>
+        <ul class="privacy-list">
+          <li><span class="icon">✓</span>Just your email and, optionally, a display name, background badge, and state — the minimum needed to verify, follow up, and add useful context.</li>
+          <li><span class="icon">✓</span>Your email stays private and is never shown to other users or made public.</li>
+          <li><span class="icon">✓</span>The background badge is self-declared, entirely optional, and shown only if you choose to.</li>
+          <li><span class="icon">✓</span>You can post anonymously to everyone except our moderation team.</li>
+          <li><span class="icon no">✕</span>We never ask for phone number, home address, or government ID to submit an issue.</li>
+          <li><span class="icon no">✕</span>We never sell your data or share individual profiles with third parties.</li>
+        </ul>
+      </div>
+
+      <div class="consent-row">
+        <input type="checkbox" id="consent" name="consent" required>
+        <label for="consent">I understand my issue description and (optionally) display name will be public, my email will stay private, and I agree to JanNiti's <a href="#">Privacy Policy</a>.</label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submitBtn">Submit Issue</button>
+        <span class="form-note">A moderator reviews new issues before they go live, usually within 24 hours.</span>
+      </div>
+    </form>
+
+    <div class="success-panel" id="successPanel">
+      <div class="check">✓</div>
+      <h2 id="successHeading">Your issue has been received</h2>
+      <p id="successBody">We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll appear on Trending Issues and other citizens can start discussing it.</p>
+      <a href="trending-issues.html" class="btn btn-primary">View Trending Issues</a>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="mark"></span>JanNiti</a>
+        <p>An independent digital public-policy laboratory for India. Jan (people) + Niti (policy).</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Platform</h5>
+          <a href="trending-issues.html">Trending Issues</a>
+          <a href="trending-sectors.html">Trending Sectors</a>
+          <a href="shout-outs.html">Shout Outs</a>
+          <a href="index.html#how-it-works">How It Works</a>
+        </div>
+        <div class="foot-col">
+          <h5>About</h5>
+          <a href="#">Our Approach</a>
+          <a href="#">For Experts</a>
+          <a href="#">For Institutions</a>
+        </div>
+        <div class="foot-col">
+          <h5>Connect</h5>
+          <a href="index.html#subscribe">Subscribe</a>
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 JanNiti. Independent and non-partisan.</span>
+      <span>From Public Voice to Public Policy.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  /* ---------- mode toggle: new issue vs existing discussion ---------- */
+  const modeRadios = document.querySelectorAll('input[name="mode"]');
+  const newFields = document.getElementById('newIssueFields');
+  const existingFields = document.getElementById('existingIssueFields');
+  const titleInput = document.getElementById('title');
+  const sectorInput = document.getElementById('sector');
+  const descriptionInput = document.getElementById('description');
+  const contribText = document.getElementById('contribText');
+
+  function applyMode(mode){
+    const isExisting = mode === 'existing';
+
+    newFields.style.display = isExisting ? 'none' : 'block';
+    existingFields.style.display = isExisting ? 'block' : 'none';
+
+    const modeFieldset = modeRadios[0]?.closest('fieldset');
+    const directDiscussion = new URLSearchParams(window.location.search).has('id');
+    if(modeFieldset){
+      modeFieldset.classList.toggle('existing-only-hidden', isExisting && directDiscussion);
+    }
+
+    const heroTitle = document.querySelector('.page-hero h1');
+    if(heroTitle) heroTitle.textContent = isExisting ? 'Add to Discussion' : 'Propose an Issue';
+
+    titleInput.toggleAttribute('required', !isExisting);
+    sectorInput.toggleAttribute('required', !isExisting);
+    descriptionInput.toggleAttribute('required', !isExisting);
+    contribText.toggleAttribute('required', isExisting);
+    document.getElementById('displayName').toggleAttribute('required', isExisting);
+
+    const contactFieldset = document.querySelector('#issueForm > fieldset:last-of-type');
+    if(contactFieldset){
+      contactFieldset.querySelectorAll('.field').forEach(field => {
+        const keep = !!field.querySelector('#displayName, #email');
+        field.classList.toggle('existing-only-hidden', isExisting && !keep);
+      });
+    }
+
+    const privacy = document.querySelector('.privacy-card');
+    if(privacy) privacy.classList.toggle('existing-only-hidden', isExisting);
+
+    const note = document.getElementById('existingModeNote');
+    if(note) note.remove();
+
+    if(isExisting){
+      const noteEl = document.createElement('div');
+      noteEl.id = 'existingModeNote';
+      noteEl.className = 'existing-mode-note';
+      noteEl.innerHTML = '<strong>Adding to an existing discussion.</strong><br>The issue details are already saved. Just add your contribution and supporting evidence.';
+      existingFields.insertAdjacentElement('beforebegin', noteEl);
+
+      document.getElementById('submitBtn').textContent = 'Add to Discussion';
+      document.querySelector('.form-note').textContent = 'Your contribution will be moderated before appearing publicly.';
+      const heroText = document.querySelector('.page-hero p');
+      if(heroText && new URLSearchParams(window.location.search).has('id')){
+        heroText.textContent = 'Add your solution, experience or supporting evidence to an existing JanNiti discussion. The issue details are already saved.';
+      }
+    } else {
+      document.getElementById('submitBtn').textContent = 'Submit Issue';
+      document.querySelector('.form-note').textContent = 'A moderator reviews new issues before they go live, usually within 24 hours.';
+    }
+  }
+
+  modeRadios.forEach(r => r.addEventListener('change', e => applyMode(e.target.value)));
+  applyMode('new');
+
+  /* ============================================================
+     DATABASE CONNECTION
+     Same "issues" table as trending-issues.html. Fill in once
+     your Supabase project is ready — this page fetches "live"
+     issues so people can attach their contribution to a real one.
+     ============================================================ */
+  const SUPABASE_URL = "https://bjjaavkwpgmuqhzndrcy.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_NLwGwLhJ_kAgGvla9LIZgw_NlnBjiUa";
+
+  let openIssues = [];
+
+  const issueSearch = document.getElementById('issueSearch');
+  const issueResults = document.getElementById('issueResults');
+  const selectedBanner = document.getElementById('selectedBanner');
+  const selectedTitle = document.getElementById('selectedTitle');
+  const selectedMeta = document.getElementById('selectedMeta');
+  const issuePickerField = document.getElementById('issuePickerField');
+  const clearSelected = document.getElementById('clearSelected');
+  let chosenIssue = null;
+
+  async function loadOpenIssues(){
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      issueResults.innerHTML = '<div class="no-results">Live issues aren\'t connected yet — check back soon, or start a "New issue" above.</div>';
+      return;
+    }
+    try{
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/issues?select=id,title,sector&status=eq.live&order=created_at.desc`,
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      if(!res.ok) throw new Error('Fetch failed');
+      openIssues = await res.json();
+      preselectFromUrl();
+    } catch(err){
+      console.error('Could not load open issues:', err);
+      issueResults.innerHTML = '<div class="no-results">Couldn\'t load issues right now — please refresh.</div>';
+    }
+  }
+
+  // If arriving from an issue's "Add to this discussion" link (?id=...),
+  // switch to existing-discussion mode and preselect that issue.
+  function preselectFromUrl(){
+    const params = new URLSearchParams(window.location.search);
+    const preId = params.get('id');
+    if(!preId) return;
+    const match = openIssues.find(i => String(i.id) === preId);
+    if(!match) return;
+    document.querySelector('input[name="mode"][value="existing"]').checked = true;
+    applyMode('existing');
+    chosenIssue = match;
+    selectedTitle.textContent = match.title;
+    selectedMeta.textContent = `${match.sector || 'Other'} · Issue details already saved`;
+    selectedBanner.style.display = 'flex';
+    issueSearch.style.display = 'none';
+    issueResults.innerHTML = '';
+    issuePickerField.style.display = 'none';
+  }
+
+  function renderResults(query){
+    const q = query.trim().toLowerCase();
+    const matches = q.length === 0
+      ? openIssues
+      : openIssues.filter(i => i.title.toLowerCase().includes(q) || (i.sector || '').toLowerCase().includes(q));
+
+    if(matches.length === 0){
+      issueResults.innerHTML = openIssues.length === 0
+        ? '<div class="no-results">No open issues yet. Switch to "New issue" above to start one.</div>'
+        : '<div class="no-results">No matching issues. Try a different keyword, or switch to "New issue" above.</div>';
+      return;
+    }
+    issueResults.innerHTML = matches.map(issue => `
+      <div class="issue-result" data-id="${issue.id}">
+        <div class="ir-title">${issue.title}</div>
+        <span class="ir-tag">${issue.sector || ''}</span>
+      </div>
+    `).join('');
+  }
+
+  issueSearch.addEventListener('focus', () => renderResults(issueSearch.value));
+  issueSearch.addEventListener('input', () => renderResults(issueSearch.value));
+
+  issueResults.addEventListener('click', (e) => {
+    const row = e.target.closest('.issue-result');
+    if(!row) return;
+    chosenIssue = openIssues.find(i => String(i.id) === row.dataset.id);
+    if(!chosenIssue) return;
+    selectedTitle.textContent = chosenIssue.title;
+    selectedMeta.textContent = `${chosenIssue.sector || 'Other'} · Issue details already saved`;
+    selectedBanner.style.display = 'flex';
+    issueSearch.value = '';
+    issueResults.innerHTML = '';
+    issueSearch.style.display = 'none';
+    issuePickerField.style.display = 'none';
+  });
+
+  clearSelected.addEventListener('click', () => {
+    chosenIssue = null;
+    selectedBanner.style.display = 'none';
+    selectedMeta.textContent = '';
+    issuePickerField.style.display = 'block';
+    issueSearch.style.display = 'block';
+    issueSearch.focus();
+  });
+
+  loadOpenIssues();
+
+  /* ---------- background badge preview ---------- */
+  const backgroundInput = document.getElementById('background');
+  const showBackgroundCheckbox = document.getElementById('showBackground');
+  function syncBackgroundCheckbox(){
+    const hasText = backgroundInput.value.trim().length > 0;
+    showBackgroundCheckbox.disabled = !hasText;
+    if(!hasText) showBackgroundCheckbox.checked = false;
+    else if(!showBackgroundCheckbox.dataset.touched) showBackgroundCheckbox.checked = true;
+  }
+  backgroundInput.addEventListener('input', syncBackgroundCheckbox);
+  showBackgroundCheckbox.addEventListener('change', () => showBackgroundCheckbox.dataset.touched = 'true');
+  syncBackgroundCheckbox();
+
+  const form = document.getElementById('issueForm');
+  const successPanel = document.getElementById('successPanel');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const mode = document.querySelector('input[name="mode"]:checked').value;
+    if(mode === 'existing' && !chosenIssue){
+      issueSearch.focus();
+      issueResults.style.outline = '2px solid #DC2626';
+      setTimeout(() => issueResults.style.outline = 'none', 1200);
+      return;
+    }
+
+    const capacity = document.querySelector('input[name="capacity"]:checked').value;
+    const showBg = showBackgroundCheckbox.checked && backgroundInput.value.trim().length > 0;
+    const contactFields = {
+      display_name: document.getElementById('displayName').value.trim() || null,
+      email: document.getElementById('email').value.trim(),
+      capacity,
+      background: backgroundInput.value.trim() || null,
+      show_background: showBg,
+      state: document.getElementById('state').value.trim() || null
+    };
+
+    const successHeading = document.getElementById('successHeading');
+    const successBody = document.getElementById('successBody');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting…';
+
+    try{
+      if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+        // Database not connected yet — nothing is saved. Say so plainly rather than faking success.
+        throw new Error('not_connected');
+      }
+
+      if(mode === 'existing'){
+        const payload = {
+          issue_id: chosenIssue.id,
+          type: 'solution',
+          text: document.getElementById('contribText').value.trim(),
+          link: document.getElementById('contribLink').value.trim() || null,
+          status: 'pending',
+          display_name: document.getElementById('displayName').value.trim() || null,
+          email: document.getElementById('email').value.trim(),
+          capacity: null,
+          background: null,
+          show_background: false,
+          state: null
+        };
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/contributions`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error('insert_failed');
+        successHeading.textContent = 'Your contribution has been received';
+        successBody.textContent = `We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll be added to the discussion on "${chosenIssue.title}".`;
+      } else {
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          sector: document.getElementById('sector').value,
+          description: document.getElementById('description').value.trim(),
+          evidence_url: document.getElementById('evidence').value.trim() || null,
+          solution: document.getElementById('solution').value.trim() || null,
+          stage: 'evidence',
+          status: 'pending',
+          ...contactFields
+        };
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/issues`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify(payload)
+        });
+        if(!res.ok) throw new Error('insert_failed');
+        successHeading.textContent = 'Your issue has been received';
+        successBody.textContent = "We'll email you a confirmation shortly. Once it clears a quick moderation check, it'll appear on Trending Issues and other citizens can start discussing it.";
+      }
+      form.style.display = 'none';
+      successPanel.style.display = 'block';
+      successPanel.scrollIntoView({behavior:'smooth', block:'start'});
+    } catch(err){
+      if(err.message === 'not_connected'){
+        successHeading.textContent = 'Almost there — database not connected yet';
+        successBody.textContent = "This form is ready to go, but it isn't saving submissions yet because the database hasn't been connected. Nothing was lost — please check back once it's live.";
+        form.style.display = 'none';
+        successPanel.style.display = 'block';
+        successPanel.scrollIntoView({behavior:'smooth', block:'start'});
+      } else {
+        console.error('Submission failed:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Issue';
+        alert("Something went wrong submitting this — please try again in a moment.");
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
