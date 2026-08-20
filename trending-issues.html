@@ -416,6 +416,7 @@
     font-size:13px;
   }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -644,22 +645,4 @@
       console.error('Could not load issues:', err);
       listingMeta.textContent = '';
       issueGrid.style.display = 'none';
-      emptyState.style.display = 'block';
-      emptyState.querySelector('p').textContent = "Couldn't load issues right now — please refresh.";
-    }
-  }
-
-  const chips = document.querySelectorAll('.chip');
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      applyFilter(chip.dataset.filter);
-    });
-  });
-
-  fetchIssues();
-</script>
-
-</body>
-</html>
+      emptyState.style.display = 
