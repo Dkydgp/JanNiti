@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JanNiti — From Public Voice to Public Policy</title>
+<meta name="description" content="JanNiti is a citizen-driven platform where people raise public problems, build solutions together, learn from experts, vote on the best options and move recommendations toward government action.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0F172A;
+    --ink-soft:#1E293B;
+    --paper:#FBF7EF;
+    --paper-card:#FFFFFF;
+    --line:#E7E0D2;
+    --saffron:#FF9933;
+    --blue:#2563EB;
+    --green:#0F7A3D;
+    --muted:#6B7280;
+    --muted-on-dark:#9AA6B8;
+    --max:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.serif{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    text-transform:uppercase;
+    letter-spacing:0.14em;
+    font-size:12px;
+    font-weight:700;
+    color:var(--saffron);
+  }
+  @media(prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--blue);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:rgba(15,23,42,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .nav-inner{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:0 28px;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:700;
+    color:#fff;
+  }
+  .brand .mark{
+    width:11px;height:11px;border-radius:50%;
+    background:var(--saffron);
+    box-shadow:14px 0 0 var(--blue), 28px 0 0 var(--green);
+    margin-right:20px;
+  }
+  nav.links{
+    display:flex;
+    align-items:center;
+    gap:36px;
+  }
+  nav.links a{
+    color:#CBD5E1;
+    font-size:14.5px;
+    font-weight:600;
+    transition:color .15s ease;
+  }
+  nav.links a:hover{color:#fff;}
+  .nav-cta{
+    background:var(--saffron);
+    color:#1a0f00;
+    padding:10px 20px;
+    border-radius:7px;
+    font-weight:700;
+    font-size:14px;
+  }
+  .nav-cta:hover{background:#ffb35c;}
+  .menu-btn{
+    display:none;
+    background:none;
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:7px;
+    color:#fff;
+    width:42px;height:38px;
+    font-size:18px;
+    cursor:pointer;
+  }
+  @media(max-width:900px){
+    nav.links{
+      position:fixed;
+      top:72px;left:0;right:0;
+      background:#0F172A;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:0;
+      padding:8px 28px 20px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      display:none;
+    }
+    nav.links.open{display:flex;}
+    nav.links a{padding:14px 0;width:100%;border-bottom:1px solid rgba(255,255,255,0.06);}
+    .nav-cta{margin-top:14px;text-align:center;}
+    .menu-btn{display:block;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(37,99,235,0.35), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(255,153,51,0.18), transparent 55%),
+      var(--ink);
+    color:#fff;
+    padding:96px 0 120px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero .eyebrow-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .hero .eyebrow-row .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+  .hero .eyebrow-row span{
+    font-size:12.5px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted-on-dark);
+    font-weight:700;
+  }
+  .hero h1{
+    font-size:clamp(38px, 5vw, 60px);
+    line-height:1.06;
+    color:#fff;
+  }
+  .hero h1 .accent-dot{color:var(--saffron);}
+  .hero .sub{
+    font-family:'Fraunces', serif;
+    font-size:clamp(19px,2vw,24px);
+    font-weight:500;
+    color:#E2C9A8;
+    margin-top:14px;
+  }
+  .hero p.desc{
+    font-size:17px;
+    line-height:1.65;
+    color:var(--muted-on-dark);
+    max-width:520px;
+    margin-top:22px;
+  }
+  .hero-actions{
+    display:flex;
+    gap:14px;
+    margin-top:36px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:14px 26px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn-primary{background:var(--saffron);color:#1a0f00;}
+  .btn-primary:hover{background:#ffb35c;}
+  .btn-outline{border-color:rgba(255,255,255,0.3);color:#fff;}
+  .btn-outline:hover{border-color:#fff;background:rgba(255,255,255,0.06);}
+
+  /* Hero signature: live-flow visual */
+  .flow-card{
+    background:rgba(255,255,255,0.045);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:16px;
+    padding:26px 24px;
+  }
+  .flow-card .flow-label{
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--muted-on-dark);
+    font-weight:700;
+    margin-bottom:18px;
+  }
+  .flow-stage{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:11px 0;
+    border-bottom:1px dashed rgba(255,255,255,0.1);
+  }
+  .flow-stage:last-child{border-bottom:none;}
+  .flow-stage .num{
+    font-family:'Fraunces', serif;
+    font-size:13px;
+    color:var(--muted-on-dark);
+    width:20px;
+  }
+  .flow-stage .name{font-size:14.5px;font-weight:600;color:#EDE7DA;}
+  .flow-stage.active .name{color:#fff;}
+  .flow-stage.active .num{color:var(--saffron);}
+  .flow-stage .bar{
+    margin-left:auto;
+    width:64px;height:5px;
+    border-radius:3px;
+    background:rgba(255,255,255,0.1);
+    overflow:hidden;
+  }
+  .flow-stage .bar span{display:block;height:100%;background:var(--blue);border-radius:3px;}
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:96px 0;}
+  .section-head{max-width:640px;margin-bottom:52px;}
+  .section-head .eyebrow{margin-bottom:12px;display:block;}
+  .section-head h2{font-size:clamp(28px,3.4vw,38px);line-height:1.15;}
+  .section-head p{font-size:16.5px;color:var(--muted);margin-top:14px;line-height:1.6;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .works{background:var(--paper);}
+  .works-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .work-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:32px 28px;
+    position:relative;
+  }
+  .work-card .step-tag{
+    font-family:'Fraunces', serif;
+    font-size:14px;
+    font-weight:600;
+    color:var(--blue);
+    margin-bottom:16px;
+    display:block;
+  }
+  .work-card h3{font-size:20px;margin-bottom:10px;}
+  .work-card p{font-size:15px;color:var(--muted);line-height:1.6;margin:0;}
+  .work-card:nth-child(1){border-top:3px solid var(--saffron);}
+  .work-card:nth-child(2){border-top:3px solid var(--blue);}
+  .work-card:nth-child(3){border-top:3px solid var(--green);}
+  @media(max-width:1100px){.works-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:900px){.works-grid{grid-template-columns:1fr;}}
+
+  /* ---------- TIMELINE (signature) ---------- */
+  .journey{
+    background:var(--ink);
+    color:#fff;
+  }
+  .journey .section-head p{color:var(--muted-on-dark);}
+  .journey .section-head h2{color:#fff;}
+  .timeline{
+    display:flex;
+    align-items:stretch;
+    justify-content:space-between;
+    position:relative;
+    margin-top:20px;
+  }
+  .timeline::before{
+    content:"";
+    position:absolute;
+    top:23px;left:0;right:0;
+    height:1px;
+    background:linear-gradient(90deg, var(--saffron), var(--blue) 50%, var(--green));
+    opacity:0.5;
+  }
+  .t-stage{
+    flex:1;
+    text-align:left;
+    position:relative;
+    padding-right:14px;
+  }
+  .t-stage .t-dot{
+    width:12px;height:12px;border-radius:50%;
+    background:var(--paper);
+    border:2px solid var(--ink);
+    outline:2px solid rgba(255,255,255,0.5);
+    margin-bottom:22px;
+    position:relative;
+    z-index:2;
+  }
+  .t-stage:nth-child(1) .t-dot{outline-color:var(--saffron);}
+  .t-stage:nth-child(2) .t-dot{outline-color:var(--saffron);}
+  .t-stage:nth-child(3) .t-dot{outline-color:var(--blue);}
+  .t-stage:nth-child(4) .t-dot{outline-color:var(--blue);}
+  .t-stage:nth-child(5) .t-dot{outline-color:var(--green);}
+  .t-stage:nth-child(6) .t-dot{outline-color:var(--green);}
+  .t-stage h4{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:16px;
+    margin-bottom:8px;
+    color:#fff;
+  }
+  .t-stage p{
+    font-size:13.5px;
+    color:var(--muted-on-dark);
+    line-height:1.55;
+    margin:0;
+    max-width:150px;
+  }
+  @media(max-width:960px){
+    .timeline{flex-direction:column;gap:28px;}
+    .timeline::before{display:none;}
+    .t-stage p{max-width:none;}
+  }
+
+  /* ---------- CONSENSUS STRIP ---------- */
+  .consensus{background:var(--paper);}
+  .consensus-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  .consensus-copy p{font-size:16px;color:var(--muted);line-height:1.7;margin-top:16px;}
+  .not-this{
+    margin-top:22px;
+    padding:16px 18px;
+    border-left:3px solid #D1D5DB;
+    background:#F1EEE4;
+    border-radius:0 8px 8px 0;
+  }
+  .not-this p{margin:0;font-size:14.5px;color:#7C7566;}
+  .not-this s{opacity:0.7;}
+  .metric-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:28px;
+  }
+  .metric-row{margin-bottom:20px;}
+  .metric-row:last-child{margin-bottom:0;}
+  .metric-row .m-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .m-label span:last-child{color:var(--muted);font-weight:600;}
+  .m-track{
+    height:8px;
+    border-radius:5px;
+    background:#EFEAE0;
+    overflow:hidden;
+  }
+  .m-fill{height:100%;border-radius:5px;}
+  @media(max-width:860px){.consensus-grid{grid-template-columns:1fr;}}
+
+  /* ---------- TRENDING ISSUES ---------- */
+  .trending{background:var(--paper);}
+  .trending .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    max-width:none;
+    gap:24px;
+  }
+  .trending .section-head .copy{max-width:560px;}
+  .view-all{
+    font-size:14.5px;
+    font-weight:700;
+    color:var(--blue);
+    white-space:nowrap;
+    padding-bottom:4px;
+    border-bottom:1px solid var(--blue);
+  }
+  .issue-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+  }
+  .issue-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .issue-card .sector-tag{
+    font-size:11.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--green);
+    background:#E7F4EC;
+    padding:5px 10px;
+    border-radius:5px;
+    width:fit-content;
+  }
+  .issue-card h3{
+    font-size:17.5px;
+    line-height:1.4;
+    font-weight:600;
+  }
+  .issue-stats{
+    display:flex;
+    gap:16px;
+    font-size:13px;
+    color:var(--muted);
+    margin-top:auto;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  @media(max-width:900px){
+    .issue-grid{grid-template-columns:1fr;}
+    .trending .section-head{flex-direction:column;align-items:flex-start;}
+  }
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{
+    background:var(--ink);
+    color:#fff;
+    text-align:center;
+    padding:110px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .final-cta::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 0%, rgba(255,153,51,0.14), transparent 55%);
+  }
+  .final-cta .inner{position:relative;max-width:640px;margin:0 auto;}
+  .final-cta h2{
+    font-size:clamp(30px,4vw,44px);
+    line-height:1.15;
+    color:#fff;
+  }
+  .final-cta p{
+    font-size:17px;
+    color:var(--muted-on-dark);
+    margin-top:18px;
+    line-height:1.6;
+  }
+  .final-cta .btn{margin-top:32px;}
+
+  /* ---------- SUBSCRIBE ---------- */
+  .subscribe{background:#F1EEE4;}
+  .sub-inner{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:40px;
+    align-items:center;
+  }
+  .sub-inner h3{font-size:23px;margin-bottom:8px;}
+  .sub-inner p{font-size:15px;color:var(--muted);margin:0;max-width:420px;}
+  form.sub-form{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  form.sub-form input[type="email"]{
+    padding:13px 16px;
+    border-radius:8px;
+    border:1px solid #D8D2C4;
+    font-size:15px;
+    min-width:260px;
+    font-family:inherit;
+    background:#fff;
+  }
+  form.sub-form input[type="email"]:focus{outline:2px solid var(--blue);outline-offset:1px;}
+  form.sub-form button{
+    padding:13px 24px;
+    border-radius:8px;
+    border:none;
+    background:var(--ink);
+    color:#fff;
+    font-weight:700;
+    font-size:14.5px;
+    cursor:pointer;
+  }
+  form.sub-form button:hover{background:var(--ink-soft);}
+  .sub-note{font-size:12.5px;color:var(--muted);margin-top:10px;}
+  .sub-success{
+    display:none;
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--green);
+  }
+  @media(max-width:760px){.sub-inner{grid-template-columns:1fr;}}
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    background:var(--ink);
+    color:var(--muted-on-dark);
+    padding:56px 0 32px;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  .foot-grid{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:32px;
+    padding-bottom:32px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .foot-brand{max-width:320px;}
+  .foot-brand .brand{color:#fff;margin-bottom:12px;}
+  .foot-brand p{font-size:14px;line-height:1.6;color:var(--muted-on-dark);}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap;}
+  .foot-col h5{
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#fff;
+    margin-bottom:14px;
+  }
+  .foot-col a{
+    display:block;
+    font-size:14px;
+    color:var(--muted-on-dark);
+    margin-bottom:10px;
+  }
+  .foot-col a:hover{color:#fff;}
+  .foot-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+    padding-top:24px;
+    font-size:13px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="#" class="brand"><span class="mark"></span>JanNiti</a>
+    <nav class="links" id="navLinks">
+      <a href="trending-issues.html">Trending Issues</a>
+      <a href="propose-issue.html">Propose a Problem</a>
+      <a href="propose-issue.html?mode=solution">Contribute a Solution</a>
+      <a href="public-voting.html">Public Voting</a>
+      <a href="recommendations.html">Recommendations to Government</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow-row"><span class="dot"></span><span>Beta · Independent · Non-partisan</span></div>
+      <h1>Discuss <span class="accent-dot">·</span> Deliberate <span class="accent-dot">·</span> Co-create</h1>
+      <p class="sub">India's Future, Together</p>
+      <p class="desc">JanNiti is a citizen-driven platform where people raise public problems, build solutions together, learn from experts, vote on the best options and move recommendations toward government action.</p>
+      <div class="hero-actions">
+        <a href="trending-issues.html" class="btn btn-primary">Explore Issues</a>
+        <a href="propose-issue.html" class="btn btn-outline">Propose a Problem</a>
+      </div>
+    </div>
+    <div class="flow-card">
+      <div class="flow-label">A proposal in progress</div>
+      <div class="flow-stage"><span class="num">01</span><span class="name">Problem Raised</span><span class="bar"><span style="width:100%;background:var(--saffron);"></span></span></div>
+      <div class="flow-stage"><span class="num">02</span><span class="name">Citizen Solutions</span><span class="bar"><span style="width:100%;background:var(--saffron);"></span></span></div>
+      <div class="flow-stage active"><span class="num">03</span><span class="name">Expert Review</span><span class="bar"><span style="width:60%;"></span></span></div>
+      <div class="flow-stage"><span class="num">04</span><span class="name">Solution Refinement</span><span class="bar"><span style="width:0%;"></span></span></div>
+      <div class="flow-stage"><span class="num">05</span><span class="name">Public Vote</span><span class="bar"><span style="width:0%;"></span></span></div>
+      <div class="flow-stage"><span class="num">06</span><span class="name">Government Submission</span><span class="bar"><span style="width:0%;"></span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="works" id="how-it-works">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">How JanNiti Works</span>
+      <h2>From a public problem to a public recommendation</h2>
+      <p>JanNiti gives citizens a structured process to raise problems, build solutions, learn from experts, refine options, vote and move the outcome toward government action.</p>
+    </div>
+    <div class="works-grid">
+      <div class="work-card">
+        <span class="step-tag">01 · Raise</span>
+        <h3>Problem Raised</h3>
+        <p>Anyone can identify a public problem and explain why it deserves attention.</p>
+      </div>
+      <div class="work-card">
+        <span class="step-tag">02 · Build</span>
+        <h3>Citizen Solutions</h3>
+        <p>People contribute solutions, evidence and practical perspectives to the problem.</p>
+      </div>
+      <div class="work-card">
+        <span class="step-tag">03 · Review</span>
+        <h3>Expert Review</h3>
+        <p>Relevant experts examine the problem and proposed solutions before refinement.</p>
+      </div>
+      <div class="work-card">
+        <span class="step-tag">04 · Refine</span>
+        <h3>Solution Refinement</h3>
+        <p>Citizen input and expert advice are used to develop clear solution options.</p>
+      </div>
+      <div class="work-card">
+        <span class="step-tag">05 · Vote</span>
+        <h3>Public Vote</h3>
+        <p>Citizens vote on one or more available solution options, with no fixed number of choices.</p>
+      </div>
+      <div class="work-card">
+        <span class="step-tag">06 · Submit</span>
+        <h3>Government Submission</h3>
+        <p>The final recommendation and public mandate are forwarded to the relevant authority.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="journey">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">From Problem to Public Policy</span>
+      <h2>Every problem follows the same open journey</h2>
+      <p>The six stages are visible to everyone, so citizens can see where a problem stands and what needs to happen next.</p>
+    </div>
+    <div class="timeline">
+      <div class="t-stage"><div class="t-dot"></div><h4>Problem Raised</h4><p>A citizen identifies and documents a real public problem.</p></div>
+      <div class="t-stage"><div class="t-dot"></div><h4>Citizen Solutions</h4><p>People contribute solutions, evidence and perspectives.</p></div>
+      <div class="t-stage"><div class="t-dot"></div><h4>Expert Review</h4><p>Relevant experts assess the problem and proposed solutions.</p></div>
+      <div class="t-stage"><div class="t-dot"></div><h4>Solution Refinement</h4><p>Citizen input and expert advice shape solution options.</p></div>
+      <div class="t-stage"><div class="t-dot"></div><h4>Public Vote</h4><p>Citizens vote on the available solution options.</p></div>
+      <div class="t-stage"><div class="t-dot"></div><h4>Government Submission</h4><p>The final recommendation is forwarded to the relevant authority.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="consensus">
+  <div class="wrap consensus-grid">
+    <div class="consensus-copy">
+      <span class="eyebrow">Deliberation over popularity</span>
+      <h2>We don't just count likes</h2>
+      <p>JanNiti isn't asking how many people liked an idea. It's asking where people actually agree — on the problem, on a solution, on an amendment — so proposals get stronger, not louder.</p>
+      <div class="not-this">
+        <p><s>1.2K likes · 340 comments</s> — this is not what progress looks like here.</p>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-row">
+        <div class="m-label"><span>Agree the problem is real</span><span>82%</span></div>
+        <div class="m-track"><div class="m-fill" style="width:82%;background:var(--green);"></div></div>
+      </div>
+      <div class="metric-row">
+        <div class="m-label"><span>Agree with Solution A</span><span>67%</span></div>
+        <div class="m-track"><div class="m-fill" style="width:67%;background:var(--blue);"></div></div>
+      </div>
+      <div class="metric-row">
+        <div class="m-label"><span>Agree with Amendment B</span><span>54%</span></div>
+        <div class="m-track"><div class="m-fill" style="width:54%;background:var(--saffron);"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trending">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="copy">
+        <span class="eyebrow">Trending Issues</span>
+        <h2>What citizens are working on right now</h2>
+      </div>
+      <a href="trending-issues.html" class="view-all">View all issues →</a>
+    </div>
+    <div class="issue-grid" id="homeIssueGrid">
+      <p style="color:var(--muted);font-size:15px;">Loading live issues…</p>
+    </div>
+  </div>
+</section>
+
+<section class="final-cta" id="propose">
+  <div class="wrap inner">
+    <h2>Your experience can become a better policy.</h2>
+    <p>Don't just complain about what's wrong. Help build what should come next.</p>
+    <a href="propose-issue.html" class="btn btn-primary">Join JanNiti</a>
+  </div>
+</section>
+
+<section class="subscribe" id="subscribe">
+  <div class="wrap sub-inner">
+    <div>
+      <h3>Stay with the discussion</h3>
+      <p>Get updates on major proposals, new policy discussions and JanNiti developments. No login required.</p>
+    </div>
+    <div>
+      <form class="sub-form" id="subForm">
+        <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="sub-note">We'll never share your email. Unsubscribe anytime.</p>
+      <p class="sub-success" id="subSuccess">You're subscribed — thank you.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="more">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="brand"><span class="mark"></span>JanNiti</a>
+        <p>An independent digital public-policy platform for India — turning public problems into structured solutions and recommendations.</p>
+        <p style="margin-top:14px;"><strong style="color:#fff;">From Public Voice to Public Policy.</strong></p>
+      </div>
+
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Explore</h5>
+          <a href="trending-issues.html">Trending Issues</a>
+          <a href="public-voting.html">Public Voting</a>
+          <a href="recommendations.html">Recommendations to Government</a>
+        </div>
+
+        <div class="foot-col">
+          <h5>Participate</h5>
+          <a href="propose-issue.html">Propose a Problem</a>
+          <a href="propose-issue.html?mode=solution">Contribute a Solution</a>
+        </div>
+
+        <div class="foot-col">
+          <h5>Connect</h5>
+          <a href="#subscribe">Subscribe</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="about.html">About Us</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© 2026 JanNiti. Independent and non-partisan.</span>
+      <span>From Public Voice to Public Policy.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const navLinks = document.getElementById('navLinks');
+  menuBtn.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  const subForm = document.getElementById('subForm');
+  const subSuccess = document.getElementById('subSuccess');
+  subForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    subForm.style.display = 'none';
+    subSuccess.style.display = 'block';
+  });
+
+  /* ============================================================
+     DATABASE CONNECTION — same "issues" table as trending-issues.html.
+     Shows the 3 most recent live issues. Fill in once Supabase is ready.
+     ============================================================ */
+  const SUPABASE_URL = "https://bjjaavkwpgmuqhzndrcy.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_NLwGwLhJ_kAgGvla9LIZgw_NlnBjiUa";
+  const sectorLabels = { infra:"Infrastructure", gov:"Governance", services:"Public Services", env:"Environment", edu:"Education", health:"Health", other:"Other" };
+
+  async function loadHomeIssues(){
+    const grid = document.getElementById('homeIssueGrid');
+    if(!SUPABASE_URL || !SUPABASE_ANON_KEY){
+      grid.innerHTML = '<p style="color:var(--muted);font-size:15px;">Live issues will appear here once the database is connected.</p>';
+      return;
+    }
+    try{
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/issues?select=*&status=eq.live&order=created_at.desc&limit=3`,
+        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } }
+      );
+      if(!res.ok) throw new Error('Fetch failed');
+      const issues = await res.json();
+      if(issues.length === 0){
+        grid.innerHTML = '<p style="color:var(--muted);font-size:15px;">No issues yet — be the first to <a href="propose-issue.html" style="color:var(--blue);font-weight:600;">propose one</a>.</p>';
+        return;
+      }
+      grid.innerHTML = issues.map(issue => `
+        <a class="issue-card" href="issue-detail.html?id=${encodeURIComponent(issue.id)}" style="display:flex;flex-direction:column;">
+          <span class="sector-tag">${sectorLabels[issue.sector] || issue.sector}</span>
+          <h3>${issue.title}</h3>
+          <div class="issue-stats"><span>${issue.consensus_pct != null ? issue.consensus_pct + '% agree on problem' : 'New'}</span></div>
+        </a>
+      `).join('');
+    } catch(err){
+      console.error('Could not load issues:', err);
+      grid.innerHTML = '<p style="color:var(--muted);font-size:15px;">Couldn\'t load live issues right now.</p>';
+    }
+  }
+  loadHomeIssues();
+</script>
+
+</body>
+</html>
