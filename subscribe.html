@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subscribe — JanNiti</title>
+<meta name="description" content="Subscribe to JanNiti for updates on public problems, citizen solutions, expert reviews, public votes and government recommendations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --ink:#0F172A; --paper:#FBF7EF; --white:#fff; --line:#E7E0D2;
+  --saffron:#FF9933; --blue:#2563EB; --green:#0F7A3D;
+  --muted:#6B7280; --muted-dark:#9AA6B8; --max:1180px;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Manrope',sans-serif;color:var(--ink);background:var(--paper)}
+h1,h2,h3,.serif{font-family:'Fraunces',Georgia,serif}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:var(--max);margin:auto;padding:0 28px}
+
+header{
+  position:sticky;top:0;z-index:100;background:rgba(15,23,42,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)
+}
+.nav-inner{max-width:var(--max);margin:auto;padding:0 28px;height:72px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#fff}
+.mark{width:11px;height:11px;border-radius:50%;background:var(--saffron);box-shadow:14px 0 0 var(--blue),28px 0 0 var(--green);margin-right:20px}
+nav.links{display:flex;align-items:center;gap:28px}
+nav.links a{color:#CBD5E1;font-size:13px;font-weight:600}
+nav.links a:hover,nav.links a.current{color:#fff}
+.nav-cta{background:var(--saffron);color:#1a0f00!important;padding:10px 16px;border-radius:7px}
+.menu-btn{display:none;background:none;border:1px solid rgba(255,255,255,.25);border-radius:7px;color:#fff;width:42px;height:38px;font-size:18px}
+
+.hero{
+  background:radial-gradient(ellipse 800px 400px at 10% -20%,rgba(37,99,235,.3),transparent 60%),var(--ink);
+  color:#fff;padding:72px 0 82px
+}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;font-weight:700;color:var(--saffron)}
+.hero h1{font-size:clamp(36px,5vw,56px);line-height:1.08;margin:14px 0 14px;color:#fff}
+.hero p{max-width:620px;color:var(--muted-dark);font-size:16px;line-height:1.7;margin:0}
+
+.subscribe-section{padding:72px 0 100px}
+.subscribe-card{
+  max-width:650px;margin:auto;background:var(--white);border:1px solid var(--line);
+  border-radius:16px;padding:38px;box-shadow:0 8px 30px rgba(15,23,42,.05)
+}
+.subscribe-card h2{font-size:30px;margin:0 0 10px}
+.subscribe-card p{color:var(--muted);line-height:1.6;font-size:14.5px}
+form{margin-top:28px}
+label{display:block;font-size:13px;font-weight:700;margin-bottom:8px}
+input{
+  width:100%;padding:15px 16px;border:1px solid var(--line);border-radius:8px;
+  font:inherit;font-size:15px;background:#fff;color:var(--ink)
+}
+input:focus{outline:2px solid rgba(37,99,235,.25);border-color:var(--blue)}
+button.submit{
+  width:100%;margin-top:14px;padding:15px;border:0;border-radius:8px;
+  background:var(--saffron);color:#1a0f00;font:700 15px 'Manrope',sans-serif;cursor:pointer
+}
+button.submit:hover{background:#ffb35c}
+button.submit:disabled{opacity:.65;cursor:not-allowed}
+.note{font-size:12px!important;color:var(--muted)!important;margin-top:12px}
+.message{display:none;margin-top:18px;padding:14px 16px;border-radius:8px;font-size:14px;line-height:1.5}
+.message.success{display:block;background:#E7F4EC;color:var(--green)}
+.message.error{display:block;background:#FDEAEA;color:#B91C1C}
+footer{background:var(--ink);color:var(--muted-dark);padding:55px 0 30px;border-top:1px solid rgba(255,255,255,.08)}
+.foot-grid{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.08)}
+.foot-brand{max-width:330px}.foot-brand p{font-size:13.5px;line-height:1.6}
+.foot-cols{display:flex;gap:60px;flex-wrap:wrap}
+.foot-col h5{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#fff;margin:0 0 14px}
+.foot-col a{display:block;font-size:13.5px;margin-bottom:10px}
+.foot-bottom{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-top:22px;font-size:12px}
+
+@media(max-width:900px){
+  nav.links{position:fixed;top:72px;left:0;right:0;background:#0F172A;flex-direction:column;align-items:flex-start;gap:0;padding:8px 28px 20px;display:none}
+  nav.links.open{display:flex}
+  nav.links a{padding:13px 0;width:100%;border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav-cta{margin-top:12px;text-align:center}
+  .menu-btn{display:block}
+}
+@media(max-width:600px){
+  .wrap{padding:0 20px}.subscribe-card{padding:25px}.hero{padding:55px 0 62px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="mark"></span>JanNiti</a>
+    <nav class="links" id="navLinks">
+      <a href="trending-issues.html">Trending Issues</a>
+      <a href="propose-issue.html">Propose a Problem</a>
+      <a href="propose-issue.html?mode=solution">Contribute a Solution</a>
+      <a href="public-voting.html">Public Voting</a>
+      <a href="recommendations.html">Recommendations to Government</a>
+      <a href="subscribe.html" class="current">Subscribe</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu">☰</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Stay Connected</span>
+    <h1>Stay informed.<br>Stay involved.</h1>
+    <p>Subscribe to JanNiti for updates on important public issues, citizen solutions, expert reviews, public votes and recommendations moving toward government action.</p>
+  </div>
+</section>
+
+<section class="subscribe-section">
+  <div class="wrap">
+    <div class="subscribe-card">
+      <span class="eyebrow">JanNiti Updates</span>
+      <h2>Join the JanNiti community</h2>
+      <p>Enter your email to receive occasional updates from JanNiti. We only need your email address to keep you informed.</p>
+
+      <form id="subscribeForm">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <button class="submit" id="submitBtn" type="submit">Subscribe to JanNiti</button>
+        <p class="note">No login required. You can unsubscribe from future updates.</p>
+        <div id="message" class="message" role="status"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand"><span class="mark"></span>JanNiti</a>
+        <p>An independent digital public-policy platform for India — turning public problems into structured solutions and recommendations.</p>
+        <p><strong style="color:#fff">From Public Voice to Public Policy.</strong></p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <h5>Explore</h5>
+          <a href="trending-issues.html">Trending Issues</a>
+          <a href="public-voting.html">Public Voting</a>
+          <a href="recommendations.html">Recommendations to Government</a>
+        </div>
+        <div class="foot-col">
+          <h5>Participate</h5>
+          <a href="propose-issue.html">Propose a Problem</a>
+          <a href="propose-issue.html?mode=solution">Contribute a Solution</a>
+        </div>
+        <div class="foot-col">
+          <h5>Connect</h5>
+          <a href="subscribe.html">Subscribe</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="about.html">About Us</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 JanNiti. Independent and non-partisan.</span>
+      <span>From Public Voice to Public Policy.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const SUPABASE_URL = "https://bjjaavkwpgmuqhzndrcy.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_NLwGwLhJ_kAgGvla9LIZgw_NlnBjiUa";
+
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const form = document.getElementById('subscribeForm');
+const emailInput = document.getElementById('email');
+const submitBtn = document.getElementById('submitBtn');
+const message = document.getElementById('message');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = emailInput.value.trim().toLowerCase();
+  if (!email) return;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Subscribing…';
+  message.className = 'message';
+  message.textContent = '';
+
+  try {
+    const { error } = await db
+      .from('subscribers')
+      .insert({ email });
+
+    if (error) {
+      if (error.code === '23505') {
+        message.className = 'message success';
+        message.textContent = 'You’re already subscribed to JanNiti. Thank you for being part of the journey!';
+      } else {
+        throw error;
+      }
+    } else {
+      message.className = 'message success';
+      message.textContent = 'Thank you for subscribing to JanNiti. We’re glad to have you with us!';
+      form.reset();
+    }
+  } catch (err) {
+    console.error(err);
+    message.className = 'message error';
+    message.textContent = 'We couldn’t complete your subscription right now. Please try again.';
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Subscribe to JanNiti';
+  }
+});
+
+const menuBtn = document.getElementById('menuBtn');
+const navLinks = document.getElementById('navLinks');
+menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+</script>
+</body>
+</html>
